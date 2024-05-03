@@ -1,0 +1,23 @@
+{
+	"name": "solidity svelte",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"format": "prettier . --list-different",
+		"lint": "eslint"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@openzeppelin/contracts": "^5.0.2",
+		"svelte-web3": "^4.3.1",
+		"vite-plugin-dts": "^3.3.1",
+		"vite-tsconfig-paths": "^4.2.0"
+	},
+	"workspaces": [
+		"./packages/frontend",
+		"./packages/contracts"
+	]
+}
