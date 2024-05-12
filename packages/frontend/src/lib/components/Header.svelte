@@ -4,6 +4,7 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
   import LifeBuoy from "lucide-svelte/icons/life-buoy";
+  import { Clapperboard } from "lucide-svelte";
   let className = undefined;
   export { className as class };
 </script>
@@ -53,16 +54,19 @@
       </div></button
     >
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger>
-        <Button variant="outline" size="sm">
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button builders={[builder]} variant="outline" size="sm">
           <LifeBuoy />
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item
-          on:click={connect}
-          class="flex items-center space-x-2"
-        ></DropdownMenu.Item>
+
+      <DropdownMenu.Content class="w-56">
+        <DropdownMenu.Group>
+          <DropdownMenu.Item>
+            <Clapperboard class="mr-2 h-4 w-4" />
+            <span>My NFTs</span>
+          </DropdownMenu.Item>
+        </DropdownMenu.Group>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   </div>

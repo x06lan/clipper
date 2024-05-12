@@ -13,7 +13,6 @@
   const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
   import { abi } from "../../../contract/artifacts/contracts/movie..sol/MovieToken.json";
   // evm.attachContract('link', LINKTOKEN_ADDRESS_ON_GOERLI, IERC20.abi)
-  console.log("abi", abi);
   evm.attachContract("link", CONTRACT_ADDRESS, abi);
 </script>
 
