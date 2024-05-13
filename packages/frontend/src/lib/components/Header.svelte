@@ -4,7 +4,7 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
   import LifeBuoy from "lucide-svelte/icons/life-buoy";
-  import { Clapperboard } from "lucide-svelte";
+  import { Clapperboard, BadgePlus } from "lucide-svelte";
   let className = undefined;
   export { className as class };
 </script>
@@ -61,12 +61,14 @@
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content class="w-56">
-        <DropdownMenu.Group>
-          <DropdownMenu.Item>
-            <Clapperboard class="mr-2 h-4 w-4" />
-            <span>My NFTs</span>
-          </DropdownMenu.Item>
-        </DropdownMenu.Group>
+        <DropdownMenu.Item>
+          <Clapperboard class="mr-2 h-4 w-4" />
+          <span>My NFTs</span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item>
+          <BadgePlus class="mr-2 h-4 w-4" />
+          <span>Create NFT</span>
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   </div>
