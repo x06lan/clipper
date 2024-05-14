@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import FileUpload from "$lib/components/FileUpload.svelte"; // Adjust the path accordingly
   import { defaultEvmStores as evm, connected } from "svelte-web3";
+  import MovieToken from "../../../contract/artifacts/contracts/movie.sol/MovieToken.json";
   // if not connected to the network, connect to the network
   onMount(async () => {
     if (!$connected) {
