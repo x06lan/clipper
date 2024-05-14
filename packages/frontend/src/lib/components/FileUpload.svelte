@@ -30,7 +30,6 @@
       });
       if (response.ok) {
         const data = await response.text();
-        console.log(data);
         onUpload(data.urls);
         console.log("Files uploaded successfully");
       } else {
