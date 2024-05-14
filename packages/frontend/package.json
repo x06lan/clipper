@@ -24,6 +24,7 @@
 	"dependencies": {
 		"bits-ui": "^0.21.7",
 		"clsx": "^2.1.1",
+		"ethers-svelte": "^3.2.1",
 		"lucide-svelte": "^0.378.0",
 		"svelte-lucide": "^1.0.5",
 		"svelte-web3": "^4.1.1",
