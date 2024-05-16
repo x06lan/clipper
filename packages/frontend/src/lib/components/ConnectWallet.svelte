@@ -1,4 +1,4 @@
 <script context="module">
   import { WC } from "svelte-wagmi";
-  export let wagmi_connect = WC;
+  export const wagmi_connect = WC;
 </script>
