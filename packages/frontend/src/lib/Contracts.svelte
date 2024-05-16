@@ -11,7 +11,7 @@
   //
   // const LINKTOKEN_ADDRESS_ON_GOERLI = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB'
   const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
-  import { abi } from "../../../contract/artifacts/contracts/movie..sol/MovieToken.json";
+  import { abi } from "../../../contract/artifacts/contracts/Movie.sol/MovieToken.json";
   // evm.attachContract('link', LINKTOKEN_ADDRESS_ON_GOERLI, IERC20.abi)
   evm.attachContract("link", CONTRACT_ADDRESS, abi);
 </script>

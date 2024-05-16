@@ -8,6 +8,7 @@
   let className = undefined;
   export { className as class };
   import { connected, chainId, selectedAccount } from "svelte-web3";
+  import { debug } from "$lib/components/Debug.svelte";
 </script>
 
 <nav class={cn("flex items-center space-x-4 lg:space-x-6", className)}>
@@ -27,7 +28,7 @@
   >
     Link wallet
   </a>
-  {#if $connected === false}
+  {#if !$connected}
     <Button on:click={connect}>
       <Wallet class="mr-2 h-4 w-4" />
       <span> Connect </span>
@@ -54,7 +55,6 @@
         <DropdownMenu.Item>
           <BadgePlus class="mr-2 h-4 w-4" />
           <span>Create NFT</span>
-          <!-- svelte-ignore a11y-missing-content -->
         </DropdownMenu.Item>
       </a>
     </DropdownMenu.Content>
