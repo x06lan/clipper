@@ -8,6 +8,7 @@
   import { Button } from "$lib/components/ui/button";
   import { zodClient } from "sveltekit-superforms/adapters";
   import { FileVideo, Upload } from "lucide-svelte";
+  import { enhance } from "$app/forms";
 
   export let data;
   const form = superForm(data.form, {
