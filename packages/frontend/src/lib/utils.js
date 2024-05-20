@@ -50,3 +50,15 @@ export const flyAndScale = (
 export function isActive(path, currentPath) {
 	return path === currentPath ? 'text-primary' : 'text-muted-foreground hover:text-primary';
 }
+
+export const GetUSDExchangeRate = async (ethAmount) => {
+	try {
+		const response = await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH");
+		const result = await response.json();
+		const usdRate = result.data.rates.USD;
+		return (ethAmount * parseFloat(usdRate)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
+	} catch (error) {
+		console.error("Error fetching exchange rate:", error);
+		return "N/A";
+	}
+};

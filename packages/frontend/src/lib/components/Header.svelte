@@ -31,36 +31,38 @@
     Link wallet
   </a>
   {#if !$connected}
-    <Button on:click={connect}>
+    <Button variant="outline" on:click={connect}>
       <Wallet class="mr-2 h-4 w-4" />
       <span> Connect </span>
     </Button>
   {:else}
-    <Button>
+    <Button variant="ghost">
       <BadgeCheck class="mr-2 h-4 w-4" />
       <span> Connected </span>
     </Button>
   {/if}
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger asChild let:builder>
-      <Button builders={[builder]} variant="outline" size="sm">
-        <LifeBuoy />
-      </Button>
-    </DropdownMenu.Trigger>
+  <div class="dark">
+    <DropdownMenu.Root class="">
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button builders={[builder]} variant="outline" size="sm">
+          <LifeBuoy />
+        </Button>
+      </DropdownMenu.Trigger>
 
-    <DropdownMenu.Content class="w-56">
-      <a href="/myNFT">
-        <DropdownMenu.Item>
-          <Clapperboard class="mr-2 h-4 w-4" />
-          <span>My NFTs</span>
-        </DropdownMenu.Item>
-      </a>
-      <a href="/nft/create">
-        <DropdownMenu.Item>
-          <BadgePlus class="mr-2 h-4 w-4" />
-          <span>Create NFT</span>
-        </DropdownMenu.Item>
-      </a>
-    </DropdownMenu.Content>
-  </DropdownMenu.Root>
+      <DropdownMenu.Content class="dark w-56 bg-card text-card-foreground">
+        <a href="/myNFT">
+          <DropdownMenu.Item class="hover:bg-muted hover:text-muted-foreground">
+            <Clapperboard class="mr-2 h-4 w-4" />
+            <span>My NFTs</span>
+          </DropdownMenu.Item>
+        </a>
+        <a href="/nft/create">
+          <DropdownMenu.Item>
+            <BadgePlus class="mr-2 h-4 w-4" />
+            <span>Create NFT</span>
+          </DropdownMenu.Item>
+        </a>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  </div>
 </nav>

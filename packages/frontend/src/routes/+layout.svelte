@@ -23,7 +23,7 @@
     </p>
   </footer> -->
 </div>
-<!-- 
+
 <style global>
   @import "../app.css";
-</style> -->
+</style>
