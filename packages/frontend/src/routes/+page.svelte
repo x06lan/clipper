@@ -9,20 +9,10 @@
   <title>Home</title>
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
-
-<section>
-  <span class="welcome">
-    <picture>
-      <source srcset={welcome} type="image/webp" />
-      <img src={welcome_fallback} alt="Welcome" />
-    </picture>
-    <div class="flex flex-wrap gap-4 mx-2">
-      {#each nfts as nft}
-        <NftCard
-          {...nft}
-          css="bg-white rounded-xl shadow-md overflow-hidden w-1/5"
-        />
-      {/each}
-    </div>
-  </span>
-</section>
+<body>
+  <div class="flex flex-wrap gap-4 mx-2">
+    {#each nfts as nft}
+      <NftCard {...nft} />
+    {/each}
+  </div>
+</body>

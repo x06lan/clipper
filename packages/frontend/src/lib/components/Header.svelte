@@ -1,5 +1,5 @@
 <script lang="js">
-  import { cn } from "$lib/utils.js";
+  import { cn, isActive } from "$lib/utils.js";
   import { connect } from "$lib/components/Connect.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
@@ -7,6 +7,7 @@
   import { Clapperboard, BadgePlus, Wallet, BadgeCheck } from "lucide-svelte";
   let className = undefined;
   export { className as class };
+  import { page } from "$app/stores";
   import { connected, chainId, selectedAccount } from "svelte-web3";
   import { debug } from "$lib/components/Debug.svelte";
 </script>

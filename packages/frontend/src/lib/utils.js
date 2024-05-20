@@ -46,3 +46,7 @@ export const flyAndScale = (
 		easing: cubicOut
 	};
 };
+
+export function isActive(path, currentPath) {
+	return path === currentPath ? 'text-primary' : 'text-muted-foreground hover:text-primary';
+}

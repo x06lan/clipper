@@ -15,7 +15,7 @@
 </script>
 
 {#if !editing}
-  <div class="flex flex-col items-center gap-4 p-4 bg-white shadow-md rounded">
+  <div>
     <h1 class="text-2xl font-bold mb-4">Create NFT</h1>
     <FileUpload onUpload={toEdit} />
   </div>

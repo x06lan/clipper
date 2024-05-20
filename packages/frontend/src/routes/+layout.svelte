@@ -3,16 +3,16 @@
   import "../app.css";
 </script>
 
-<div class="app">
-  <div class="hidden flex-col md:flex">
-    <div class="border-b">
-      <div class="flex h-16 items-center px-4">
-        <Header />
+<div class="app dark bg-background text-foreground">
+  <main>
+    <div class="hidden flex-col md:flex">
+      <div class="border-b">
+        <div class="flex h-16 items-center px-4">
+          <Header />
+        </div>
       </div>
     </div>
-  </div>
 
-  <main>
     <slot />
   </main>
 
