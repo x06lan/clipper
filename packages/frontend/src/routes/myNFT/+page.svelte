@@ -9,3 +9,4 @@
     <NftCard {...nft} css="" />
   {/each}
 </div>
+<div class="dark:backgrou"></div>

@@ -9,10 +9,8 @@
   <title>Home</title>
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
-<body>
-  <div class="flex flex-wrap gap-4 mx-2">
-    {#each nfts as nft}
-      <NftCard {...nft} />
-    {/each}
-  </div>
-</body>
+<div class="flex flex-wrap gap-4 mx-2">
+  {#each nfts as nft}
+    <NftCard {...nft} />
+  {/each}
+</div>

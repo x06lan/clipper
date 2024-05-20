@@ -1,9 +1,9 @@
+<script>
+  import Contracts from "$lib/Contracts.svelte";
+</script>
+
 <svelte:head>
   <title>$contracts</title>
 </svelte:head>
-
-<script>
-  import Contracts from '$lib/Contracts.svelte'
-</script>
-
+<div>test</div>
 <Contracts />
