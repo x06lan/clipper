@@ -1,31 +1,32 @@
 <script lang="js">
-  import { cn, isActive } from "$lib/utils.js";
+  import { cn, isActive } from "$lib/utils.js"; // Import the utility function
   import { connect } from "$lib/components/Connect.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
   import LifeBuoy from "lucide-svelte/icons/life-buoy";
   import { Clapperboard, BadgePlus, Wallet, BadgeCheck } from "lucide-svelte";
+  import { page } from "$app/stores"; // Import the $page store
+  import { connected } from "svelte-web3"; // Adjust the import as needed
   let className = undefined;
   export { className as class };
-  import { page } from "$app/stores";
-  import { connected, chainId, selectedAccount } from "svelte-web3";
-  import { debug } from "$lib/components/Debug.svelte";
 </script>
 
 <nav class={cn("flex items-center space-x-4 lg:space-x-6", className)}>
-  <a href="/" class="text-sm font-medium transition-colors hover:text-primary">
+  <a
+    href="/"
+    class={`text-sm font-medium transition-colors ${isActive("/", $page.url.pathname)}`}
+  >
     Overview
   </a>
-
   <a
     href="/web3/contracts"
-    class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+    class={`text-sm font-medium transition-colors ${isActive("/web3/contracts", $page.url.pathname)}`}
   >
     Contract functions
   </a>
   <a
     href="/web3/set"
-    class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+    class={`text-sm font-medium transition-colors ${isActive("/web3/set", $page.url.pathname)}`}
   >
     Link wallet
   </a>
