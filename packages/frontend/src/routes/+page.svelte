@@ -1,6 +1,8 @@
 <script>
   import welcome from "$lib/images/svelte-welcome.webp";
   import welcome_fallback from "$lib/images/svelte-welcome.png";
+  import NftCard from "$lib/components/NFTCard.svelte";
+  import { nfts } from "../placeholder/nfts.json";
 </script>
 
 <svelte:head>
@@ -14,5 +16,13 @@
       <source srcset={welcome} type="image/webp" />
       <img src={welcome_fallback} alt="Welcome" />
     </picture>
+    <div class="flex flex-wrap gap-4 mx-2">
+      {#each nfts as nft}
+        <NftCard
+          {...nft}
+          css="bg-white rounded-xl shadow-md overflow-hidden w-1/5"
+        />
+      {/each}
+    </div>
   </span>
 </section>

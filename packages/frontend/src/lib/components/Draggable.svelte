@@ -29,7 +29,7 @@
   style="left: {left}px; top: {top}px"
   class="draggable"
   ><FileVideo />
-  {name}
+  <!-- {name} -->
 </button>
 
 <style>

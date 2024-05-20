@@ -47,10 +47,12 @@
     </DropdownMenu.Trigger>
 
     <DropdownMenu.Content class="w-56">
-      <DropdownMenu.Item>
-        <Clapperboard class="mr-2 h-4 w-4" />
-        <span>My NFTs</span>
-      </DropdownMenu.Item>
+      <a href="/myNFT">
+        <DropdownMenu.Item>
+          <Clapperboard class="mr-2 h-4 w-4" />
+          <span>My NFTs</span>
+        </DropdownMenu.Item>
+      </a>
       <a href="/nft/create">
         <DropdownMenu.Item>
           <BadgePlus class="mr-2 h-4 w-4" />
