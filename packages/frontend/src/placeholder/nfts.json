@@ -1,0 +1,34 @@
+{
+    "nfts": [
+        {
+            "id": 1,
+            "price": 100,
+            "name": "Apple",
+            "img": "https://images.unsplash.com/photo-1490300472339-79e4adc6be4a?w=300&dpr=2&q=80"
+        },
+        {
+            "id": 2,
+            "price": 200,
+            "name": "Bananananananana",
+            "img": "https://hackmd.io/_uploads/S1Rrdsy-0.png"
+        },
+        {
+            "id": 3,
+            "price": 300,
+            "name": "Orange",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 4,
+            "price": 400,
+            "name": "Grapes",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 5,
+            "price": 500,
+            "name": "Pineapple",
+            "img": "../../src/lib/images/github.svg"
+        }
+    ]
+}
