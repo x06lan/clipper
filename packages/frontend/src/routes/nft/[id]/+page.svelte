@@ -76,18 +76,18 @@
     object-fit: cover;
     border-bottom: 1px solid #333;
   }
-  .button-wide {
+  /* .button-wide {
     width: 100%;
-  }
+  } */
   .text-lg {
     font-size: 1.125rem;
   }
   .text-xl {
     font-size: 1.25rem;
   }
-  .text-2xl {
+  /* .text-2xl {
     font-size: 1.5rem;
-  }
+  } */
   .text-3xl {
     font-size: 1.875rem;
   }
