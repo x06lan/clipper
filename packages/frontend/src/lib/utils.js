@@ -62,3 +62,7 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 		return "N/A";
 	}
 };
+
+import { abi } from "../../../contract/artifacts/contracts/Movie.sol/MovieToken.json";
+export const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
+export const CONTRACT_ABI = abi;
