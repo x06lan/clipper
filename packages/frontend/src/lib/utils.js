@@ -1,6 +1,12 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
+import {
+	defaultEvmStores as evm,
+	contracts,
+	connected,
+	selectedAccount,
+} from "svelte-web3";
 
 export function cn(...inputs) {
 	return twMerge(clsx(inputs));
@@ -66,3 +72,10 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 import { abi } from "../../../contract/artifacts/contracts/Movie.sol/MovieToken.json";
 export const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
 export const CONTRACT_ABI = abi;
+
+
+export const getMyNFTs = async () => {
+}
+
+export const getNFT = async (id) => {
+}

@@ -1,13 +1,23 @@
 <script>
   import { writable } from "svelte/store";
-  import { CircleX, Upload } from "lucide-svelte";
+  import { CircleX, Upload, LoaderCircle } from "lucide-svelte";
   import { fly, fade } from "svelte/transition";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Textarea } from "$lib/components/ui/textarea";
+  import { Button } from "$lib/components/ui/button";
   import { enhance } from "$app/forms";
   import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils";
-  import { defaultEvmStores as evm, contracts, connected } from "svelte-web3";
-
+  import { onMount } from "svelte";
+  import {
+    defaultEvmStores as evm,
+    contracts,
+    connected,
+    selectedAccount,
+  } from "svelte-web3";
+  onMount(() => {
+    // add a test to return in SSR context
+    evm.setProvider();
+  });
   let thumbnailPreview = writable(null);
   let dragIndex = writable(null);
   let hoverIndex = writable(null);
@@ -18,13 +28,13 @@
   evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 
   async function _mint(nftName, description, clips, thumbnail) {
-    const clipsArray = clips.map((clip) => [clip.name, clip.url]);
+    const clipsArray = clips.map((clip) => [clip.file.name, clip.file]);
 
     const uploadToIPFS = async (file) => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const response = await fetch("http://api.ipfs.x06lan.com/api/v0/add", {
+        const response = await fetch("/api/ipfs/add", {
           method: "POST",
           body: formData,
           redirect: "manual",
@@ -49,13 +59,12 @@
       console.error("Failed to upload thumbnail to IPFS");
       return; // or handle the error as needed
     }
-
     // Upload clips to IPFS
     const clipsCids = await Promise.all(
       clipsArray.map(async (clip) => {
-        const cid = await uploadToIPFS(clip.file);
+        const cid = await uploadToIPFS(clip[1]);
         if (!cid) {
-          console.error(`Failed to upload clip ${clip.name} to IPFS`);
+          console.error(`Failed to upload clip ${clip[0]} to IPFS`);
           return null; // or handle the error as needed
         }
         return cid;
@@ -66,20 +75,34 @@
       console.error("One or more clips failed to upload to IPFS");
       return; // or handle the error as needed
     }
-
+    console.log("Clips, clipsCids", clipsArray, clipsCids);
     // Overwrite clips with CIDs
     clipsArray.forEach((clip, index) => {
       clip[1] = clipsCids[index].Hash;
     });
 
-    try {
-      const result = await $contracts.Clipper.methods
-        .mint(nftName, description, clipsArray, thumbnailCid.Hash)
-        .call();
-      console.log(result);
-    } catch (error) {
-      console.error("Error minting NFT:", error);
-    }
+    let seed = Math.floor(Math.random() * 1000000);
+    formattedClips = clipsArray.map((clip, index) => {
+      return {
+        id: seed * (index + 1),
+        name: clip[0],
+        image_url: thumbnailCid.Hash,
+        movie_url: clip[1],
+      };
+    });
+    const result = await $contracts.Clipper.methods
+      .mint(formattedClips, nftName, thumbnailCid.Hash, seed)
+      .send({ from: $selectedAccount })
+      .on("transactionHash", (hash) => {
+        console.log("Transaction hash:", hash);
+      })
+      .on("receipt", (receipt) => {
+        console.log("Receipt:", receipt);
+      })
+      .on("error", (error) => {
+        console.error("Error minting NFT:", error);
+      });
+    console.log(result);
   }
 
   const mint = async () => {
@@ -179,6 +202,7 @@
   }
 </script>
 
+"
 <div class="flex">
   <div class="w-1/4 p-4">
     <div
@@ -329,13 +353,7 @@
         {/if}
       </div>
     </div>
-    <button
-      type="submit"
-      class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-      on:click={mint}
-    >
-      Create
-    </button>
+    <Button on:click={mint}>Create</Button>
   </div>
 </div>
 

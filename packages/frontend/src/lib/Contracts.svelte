@@ -13,7 +13,7 @@
   const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
   import { abi } from "../../../contract/artifacts/contracts/Movie.sol/MovieToken.json";
   // evm.attachContract('link', LINKTOKEN_ADDRESS_ON_GOERLI, IERC20.abi)
-  evm.attachContract("link", CONTRACT_ADDRESS, abi);
+  evm.attachContract("Clipper", CONTRACT_ADDRESS, abi);
 </script>
 
 <div class="content">
@@ -34,8 +34,8 @@
   </code></pre>
 
   {#if $connected}
-    {#if $contracts.link}
-      {#await $contracts.link.methods.name().call()}
+    {#if $contracts.Clipper}
+      {#await $contracts.Clipper.methods.name().call()}
         <span>waiting for $contracts.link.methods.name().call() Promise...</span
         >
       {:then name}
