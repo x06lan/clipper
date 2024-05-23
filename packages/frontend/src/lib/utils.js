@@ -80,7 +80,7 @@ export const getMyNFTs = async () => {
 export const getNFT = async (id) => {
 }
 
-export const getFileFromIPFS = async (cid) => {
+export const getFileFromIPFS = (cid) => {
 	const url = "https://ipfs.x06lan.com/ipfs/" + cid;
 	// return (await fetch(url)).blob();
 	return url;
