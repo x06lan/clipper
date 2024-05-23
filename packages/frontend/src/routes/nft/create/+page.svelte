@@ -1,13 +1,16 @@
 <script>
   import { writable } from "svelte/store";
-  import { CircleX, Upload, LoaderCircle } from "lucide-svelte";
+  import { CircleX, Upload } from "lucide-svelte";
+  import * as Dialog from "$lib/components/ui/dialog";
   import { fly, fade } from "svelte/transition";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Button } from "$lib/components/ui/button";
-  import { enhance } from "$app/forms";
   import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils";
   import { onMount } from "svelte";
+  import Loading from "$lib/components/Loading.svelte";
+  import { goto } from "$app/navigation";
+
   import {
     defaultEvmStores as evm,
     contracts,
@@ -21,6 +24,7 @@
   let thumbnailPreview = writable(null);
   let dragIndex = writable(null);
   let hoverIndex = writable(null);
+  let tokenId = null;
   const nftName = writable("");
   const description = writable("");
   const thumbnail = writable(null);
@@ -81,7 +85,7 @@
       clip[1] = clipsCids[index].Hash;
     });
 
-    let seed = Math.floor(Math.random() * 1000000);
+    let seed = Math.floor(Math.random() * 1000000000);
     let formattedClips = clipsArray.map((clip, index) => {
       return {
         id: seed * (index + 1),
@@ -103,11 +107,13 @@
       .on("error", (error) => {
         console.error("Error minting NFT:", error);
       });
-    console.log(result);
+    return result.events.Transfer.returnValues.tokenId;
   }
 
   const mint = async () => {
-    await _mint($nftName, $description, $mediaFiles, $thumbnail);
+    minting = true;
+    tokenId = await _mint($nftName, $description, $mediaFiles, $thumbnail);
+    minting = false;
   };
   function handleThumbnailChange(event) {
     const file = event.target.files[0];
@@ -201,9 +207,39 @@
   function removeFile(index) {
     mediaFiles.update((files) => files.filter((_, i) => i !== index));
   }
+  let minting = false;
 </script>
 
-"
+<Dialog.Root
+  bind:open={tokenId}
+  preventScroll={true}
+  closeOnEscape={false}
+  closeOnOutsideClick={false}
+>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>Mint Success!</Dialog.Title>
+      <Dialog.Description class="text-wrap">
+        The NFT has been minted successfully. ID: {tokenId}
+      </Dialog.Description>
+      <Button on:click={() => goto(`/myNFT/${tokenId}`)}>View NFT</Button>
+      <Button on:click={() => location.reload()}>Mint Another</Button>
+    </Dialog.Header>
+  </Dialog.Content>
+</Dialog.Root>
+
+{#if minting}
+  <Loading />
+{/if}
+{#if tokenId}
+  <div>
+    <h1 class="text-2xl font-bold">NFT Minted!</h1>
+    <p>Token ID: {tokenId}</p>
+    <Button on:click={() => goto(`/nft/${tokenId}`)}>View NFT</Button>
+    <Button on:click={() => location.reload()}>Mint Another</Button>
+  </div>
+{/if}
 <div class="flex">
   <div class="w-1/4 p-4">
     <div
@@ -354,7 +390,7 @@
         {/if}
       </div>
     </div>
-    <Button on:click={mint}>Create</Button>
+    <Button on:click={mint} class="w-full mt-2">Create NFT</Button>
   </div>
 </div>
 

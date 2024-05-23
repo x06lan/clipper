@@ -12,10 +12,13 @@
     CONTRACT_ABI,
     CONTRACT_ADDRESS,
   } from "$lib/utils.js";
+  import Loading from "$lib/components/Loading.svelte";
+  let loading = true;
   onMount(async () => {
     await evm.setProvider();
     await evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
     await fetchNFTData();
+    loading = false;
   });
   let nfts = [];
   async function fetchNFTData() {
@@ -46,6 +49,9 @@
   }
 </script>
 
+{#if loading}
+  <Loading />
+{/if}
 <div class="container mx-auto p-4">
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"

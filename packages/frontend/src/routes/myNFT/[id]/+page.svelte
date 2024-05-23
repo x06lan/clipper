@@ -13,7 +13,7 @@
     CONTRACT_ABI,
     CONTRACT_ADDRESS,
   } from "$lib/utils.js";
-
+  import Loading from "$lib/components/Loading.svelte";
   export let data;
   let nft = data.nftData.nft;
   let usdPrice = "";
@@ -53,11 +53,8 @@
 </script>
 
 {#if nft}
-  <!-- <div class="h-52"> -->
-  <!-- <div class="h-screen"> -->
   <SimplePlayer videos={nft.videos} controls={true} css={"h-[80vh]"} />
-  <!-- </div> -->
-  <!-- </div> -->
+
   <div class="container mx-auto p-4">
     <div class="flex flex-col lg:space-x-8 mt-4">
       <!-- NFT Details Section -->
@@ -102,6 +99,8 @@
       </div>
     </div>
   </div>
+{:else}
+  <Loading />
 {/if}
 
 <style>
