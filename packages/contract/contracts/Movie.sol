@@ -13,14 +13,14 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
     struct Clip {
         uint256 id;
         string name;
-        string image_url;
-        string movie_url;
+        string image_cid;
+        string video_cid;
     }
 
     struct Token {
         uint256 id;
         string name;
-        string image_url;
+        string image_cid;
         uint256[] clips;
         uint256 price;
         bool selling;
@@ -165,7 +165,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:tokenId,
             clips:order,
             name:name,
-            image_url:image,
+            image_cid:image,
             price: 0 wei,
             selling:false,
             parant:new uint256[](2),
@@ -203,7 +203,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:newTokenId,
             clips:clipOrder,
             name:name,
-            image_url:image,
+            image_cid:image,
             price: 0 wei,
             selling:false,
             parant:new uint256[](2),
@@ -271,7 +271,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:newTokenIdLeft,
             clips:leftClip,
             name:leftName,
-            image_url:leftImage,
+            image_cid:leftImage,
             price: 0 wei,
             parant:new uint256[](1),
             selling:false,
@@ -284,7 +284,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:newTokenIdRight,
             clips:rightClip,
             name:rightName,
-            image_url:rightImage,
+            image_cid:rightImage,
             price: 0 wei,
             parant:new uint256[](1),
             selling:false,
@@ -318,7 +318,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         uint256 tokenId
     ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         // require(_availableTokenId(tokenId)==true,"token id not exist");
-        return _tokens[tokenId].image_url;
+        return _tokens[tokenId].image_cid;
         // return super.tokenURI(tokenId);
     }
 

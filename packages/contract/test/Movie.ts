@@ -32,10 +32,10 @@ describe("MovieContract", function () {
       const { movieContract, owner, account1 } = await loadFixture(deployMovieTokenFixture);
 
       const clips = [
-        { id: BigInt(1), name: "Clip1", image_url: "http://clip1.com", movie_url: "http://movie1.com" },
-        { id: BigInt(2), name: "Clip2", image_url: "http://clip2.com", movie_url: "http://movie2.com" },
-        { id: BigInt(3), name: "Clip3", image_url: "http://clip3.com", movie_url: "http://movie3.com" },
-        { id: BigInt(4), name: "Clip4", image_url: "http://clip4.com", movie_url: "http://movie4.com" }
+        { id: BigInt(1), name: "Clip1", image_cid: "http://clip1.com", video_cid: "http://movie1.com" },
+        { id: BigInt(2), name: "Clip2", image_cid: "http://clip2.com", video_cid: "http://movie2.com" },
+        { id: BigInt(3), name: "Clip3", image_cid: "http://clip3.com", video_cid: "http://movie3.com" },
+        { id: BigInt(4), name: "Clip4", image_cid: "http://clip4.com", video_cid: "http://movie4.com" }
       ]
       const seed = BigInt(1);
       const name = "token 1";
