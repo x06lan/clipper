@@ -6,9 +6,13 @@
   import LifeBuoy from "lucide-svelte/icons/life-buoy";
   import { Clapperboard, BadgePlus, Wallet, BadgeCheck } from "lucide-svelte";
   import { page } from "$app/stores"; // Import the $page store
-  import { connected } from "svelte-web3"; // Adjust the import as needed
+  import { defaultEvmStores, connected } from "svelte-web3"; // Adjust the import as needed
   let className = undefined;
   export { className as class };
+  import { onMount } from "svelte";
+  onMount(() => {
+    defaultEvmStores.setProvider();
+  });
 </script>
 
 <nav class={cn("flex items-center space-x-4 lg:space-x-6", className)}>

@@ -62,15 +62,15 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 		const response = await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH");
 		const result = await response.json();
 		const usdRate = result.data.rates.USD;
-		return (ethAmount * parseFloat(usdRate)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
+		return (Number(ethAmount) * parseFloat(usdRate)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
 	} catch (error) {
 		console.error("Error fetching exchange rate:", error);
 		return "N/A";
 	}
 };
 
-import { abi } from "../../../contract/artifacts/contracts/Movie.sol/MovieToken.json";
-export const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
+import { abi } from "../../../contract/artifacts/contracts/Movie.sol/Movie.json";
+export const CONTRACT_ADDRESS = "0xba4cea22e6535D551DD0723502c74D560049861b";
 export const CONTRACT_ABI = abi;
 
 
@@ -78,4 +78,10 @@ export const getMyNFTs = async () => {
 }
 
 export const getNFT = async (id) => {
+}
+
+export const getFileFromIPFS = async (cid) => {
+	const url = "https://ipfs.x06lan.com/ipfs/" + cid;
+	// return (await fetch(url)).blob();
+	return url;
 }

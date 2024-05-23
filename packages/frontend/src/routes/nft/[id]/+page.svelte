@@ -4,15 +4,24 @@
   import * as Card from "$lib/components/ui/card";
   import { GetUSDExchangeRate } from "$lib/utils.js";
   import { onMount } from "svelte";
-  import { defaultEvmStores as evm, contracts } from "svelte-web3";
-  import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils.js";
+
+  import {
+    defaultEvmStores as evm,
+    contracts,
+    selectedAccount,
+  } from "svelte-web3";
+  import {
+    getFileFromIPFS,
+    CONTRACT_ABI,
+    CONTRACT_ADDRESS,
+  } from "$lib/utils.js";
   export let data;
   let nft = data.nftData.nft;
   // Reactive variable for USD price
   let usdPrice = "";
   onMount(async () => {
-    evm.setProvider();
-    evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
+    await evm.setProvider();
+    await evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
     await fetchNFTData();
     fetchUSDPrice();
   });
@@ -24,13 +33,14 @@
   // Fetch USD price on component mount
   async function fetchNFTData() {
     let id = data.nftData.id;
-    const info = await $contracts.Clipper.methods.tokenInfo(id).call();
+    const info = await $contracts.Clipper.methods
+      .tokenInfo(id)
+      .call({ from: $selectedAccount });
     console.log(info);
     nft = {
       id: id,
       name: info.name,
-      img: info.img,
-      owner: info.owner,
+      img: await getFileFromIPFS(info.image_cid),
       price: info.price,
       saleEnd: info.saleEnd,
       description: info.description,
@@ -53,7 +63,14 @@
         <div class="text-3xl font-bold">{nft.name}</div>
         <div class="text-lg text-gray-400">#{nft.id}</div>
         <div class="text-gray-500">
-          Owned by <span class="text-blue-500">{nft.owner}</span>
+          Owned by
+          {#await $contracts.Clipper.methods.ownerOf(nft.id).call()}
+            ...
+          {:then owner}
+            <span class="text-blue-500">
+              {owner}
+            </span>
+          {/await}
         </div>
         <div class="text-xl font-bold flex items-center space-x-2">
           <span>{nft.price} ETH</span>

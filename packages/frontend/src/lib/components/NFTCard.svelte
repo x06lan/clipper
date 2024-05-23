@@ -6,6 +6,7 @@
   export let img;
   export let css =
     "flex flex-col items-center bg-gray-800 p-4 hover:bg-gray-700 transition rounded-lg shadow-lg overflow-hidden";
+  let s_id = Number(id).toFixed(0);
 </script>
 
 <a href="/nft/{id}" class="w-full">
@@ -20,7 +21,7 @@
     <div class="mt-4 w-full text-center text-white">
       <div class="text-lg font-bold">{name}</div>
       <div class="uppercase tracking-wide text-sm text-gray-400 font-semibold">
-        #{id}
+        #{s_id}
       </div>
       <p class="mt-2 text-gray-400">{price} ETH</p>
     </div>

@@ -82,14 +82,15 @@
     });
 
     let seed = Math.floor(Math.random() * 1000000);
-    formattedClips = clipsArray.map((clip, index) => {
+    let formattedClips = clipsArray.map((clip, index) => {
       return {
         id: seed * (index + 1),
         name: clip[0],
-        image_url: thumbnailCid.Hash,
-        movie_url: clip[1],
+        image_cid: thumbnailCid.Hash,
+        video_cid: clip[1],
       };
     });
+    console.log(formattedClips, nftName, thumbnailCid.Hash, seed);
     const result = await $contracts.Clipper.methods
       .mint(formattedClips, nftName, thumbnailCid.Hash, seed)
       .send({ from: $selectedAccount })
