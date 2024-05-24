@@ -1,8 +1,10 @@
 <script>
   import NftContainer from "$lib/components/NFTContainer.svelte";
   import NftCard from "$lib/components/NFTCard.svelte";
+  import { Button } from "$lib/components/ui/button";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
+  import { Plus } from "lucide-svelte";
   import {
     defaultEvmStores as evm,
     contracts,
@@ -14,7 +16,6 @@
     CONTRACT_ADDRESS,
   } from "$lib/utils.js";
   import Loading from "$lib/components/Loading.svelte";
-  import Button from "$lib/components/ui/button";
   let loading = true;
   onMount(async () => {
     await evm.setProvider();
@@ -67,25 +68,37 @@
       }
     });
   }
+  let merging = false;
 </script>
 
 {#if loading}
   <Loading />
-{/if}
-<div class="container mx-auto p-4">
-  <div
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-  >
-    {#each nfts as nft}
-      <NftCard
-        {...nft}
-        variant="select"
-        selected={false}
-        {selectedCount}
-        {toggleSelect}
-      />
-    {/each}
+{:else if !merging}
+  <div class="container mx-auto p-4">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+    >
+      {#each nfts as nft}
+        <NftCard
+          {...nft}
+          variant="select"
+          selected={false}
+          {selectedCount}
+          {toggleSelect}
+        />
+      {/each}
+    </div>
   </div>
-</div>
-
-<!-- <NftContainer {nfts} /> -->
+  <Button
+    variant="default"
+    class="w-full items-center lg:w-1/2 mx-auto"
+    on:click={() => {
+      merging = true;
+    }}
+  >
+    Merge
+  </Button>
+{:else}
+  <NftContainer videos={nfts[selectedIDs[0]]} />
+  <NftContainer videos={nfts[selectedIDs[1]]} />
+{/if}

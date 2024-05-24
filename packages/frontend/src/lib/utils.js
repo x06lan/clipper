@@ -81,8 +81,8 @@ export const getNFT = async (id) => {
 }
 
 export const getFileFromIPFS = (cid) => {
-	// const url = "https://ipfs.x06lan.com/ipfs/" + cid;
-	const url = "/api/ipfs/get/" + cid;
+	const url = "https://ipfs.x06lan.com/ipfs/" + cid;
+	// const url = "/api/ipfs/gt/" + cid;
 	// const url = "https://cloudflare-ipfs.com/ipfs/" + cid;
 	// return (await fetch(url)).blob();
 	return url;

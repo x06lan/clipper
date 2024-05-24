@@ -55,7 +55,11 @@
             alt={name}
           />
         {:else}
-          <SimplePlayer {videos} css={"aspect-square w-full"} />
+          <SimplePlayer
+            {videos}
+            css={"aspect-square w-full"}
+            controls={false}
+          />
         {/if}
       </div>
       <div class="mt-4 w-full text-center text-white">
