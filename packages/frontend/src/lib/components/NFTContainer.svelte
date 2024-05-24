@@ -1,54 +1,45 @@
 <script>
   import { dndzone } from "svelte-dnd-action";
-  export let videos = [];
-  export let onDrop;
+  import { onMount } from "svelte";
   import { Badge } from "$lib/components/ui/badge";
-  import { CircleX } from "lucide-svelte";
   import { fly, fade } from "svelte/transition";
+  import { flip } from "svelte/animate";
+
+  export let videos = [];
 
   function handleDrop(event) {
-    onDrop(event.detail.items);
+    videos = event.detail.items;
   }
-  function removeFile(index) {
-    videos.update((files) => files.filter((_, i) => i !== index));
+  function handleConsiderFinalize(event) {
+    videos = event.detail.items;
   }
+
+  let flipDuration = 100;
 </script>
 
-<div
-  class="p-4 border rounded dark"
-  use:dndzone={{ items: videos, onDrop: handleDrop }}
->
-  {#each videos as { file, preview }, index (file.name)}
-    <div
-      role="button"
-      tabindex="0"
-      class="video-container flex flex-col items-center bg-gray-800 rounded-lg relative m-2"
-      in:fly={{ x: 50 }}
-      out:fade={{ x: -50 }}
-      draggable="true"
-    >
-      <Badge class="absolute top-2 left-2">
-        {index + 1}
-      </Badge>
-      <video
-        class="w-fill h-40 object-cover rounded-lg"
-        src={preview}
-        autoplay
-        loop
-        muted
-      />
-      <span
-        class="mt-1 text-center text-white overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-xs"
+<div class="rounded-md border p-4">
+  <section
+    use:dndzone={{ items: videos }}
+    on:consider={handleDrop}
+    on:finalize={handleConsiderFinalize}
+    class="min-h-52 p-4 border dark rounded-lg grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4"
+  >
+    {#each videos as item, index (item.id)}
+      <div
+        class="flex flex-col items-center bg-gray-800 rounded-lg relative m-2"
+        animate:flip={{ duration: flipDuration }}
       >
-        {file.name}
-      </span>
-      <button
-        type="button"
-        class="absolute top-2 right-2 text-white rounded-full p-1"
-        on:click={() => removeFile(index)}
-      >
-        <CircleX class="w-4 h-4" />
-      </button>
-    </div>
-  {/each}
+        <Badge class="absolute top-2 left-2">
+          {index + 1}
+        </Badge>
+        <video
+          class="h-40 object-cover rounded-lg"
+          src={item.clip}
+          autoplay
+          loop
+          muted
+        />
+      </div>
+    {/each}
+  </section>
 </div>

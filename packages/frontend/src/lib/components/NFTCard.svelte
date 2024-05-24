@@ -4,11 +4,11 @@
   import { CircleCheck } from "lucide-svelte";
   import { get } from "svelte/store";
 
-  export let id;
-  export let name;
-  export let price;
-  export let img;
-  export let videos;
+  export let id = null;
+  export let name = null;
+  export let price = null;
+  export let img = null;
+  export let videos = null;
   export let redirect = null;
   export let variant = "default";
   export let selected = false;
@@ -18,8 +18,8 @@
   let isHovered = false;
 
   // Counter for selected cards
-  export let toggleSelect;
-  export let selectedCount;
+  export let toggleSelect = () => {};
+  export let selectedCount = null;
   function handleToggleSelect() {
     const count = get(selectedCount);
     if (selected || (!selected && count < 2)) {
@@ -77,7 +77,6 @@
   <!-- svelte-ignore a11y-invalid-attribute -->
   <button
     class="w-full relative"
-    role="button"
     tabindex="-1"
     on:mouseover={() => {
       isHovered = true;

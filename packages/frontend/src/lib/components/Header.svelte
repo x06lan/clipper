@@ -68,9 +68,9 @@
           </DropdownMenu.Item>
         </a>
 
-        <DropdownMenu.Item href="/nft/merge">
+        <DropdownMenu.Item href="/nft/fuse">
           <FoldHorizontal class="mr-2 h-4 w-4" />
-          <span>Merge NFTs</span>
+          <span>Fuse NFTs</span>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

@@ -1,9 +1,6 @@
 <script>
   import { Header } from "$lib/components/index.js";
   import "../app.css";
-  import { defaultEvmStores } from "svelte-web3";
-  import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils.js";
-  defaultEvmStores.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 </script>
 
 <div class="dark">
@@ -19,12 +16,6 @@
       <slot />
     </body>
   </main>
-
-  <!-- <footer>
-    <p>
-      visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit
-    </p>
-  </footer> -->
 </div>
 
 <style global>
