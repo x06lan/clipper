@@ -1,0 +1,76 @@
+{
+    "nfts": [
+        {
+            "id": 1,
+            "price": 100,
+            "name": "Apple",
+            "img": "https://images.unsplash.com/photo-1490300472339-79e4adc6be4a?w=300&dpr=2&q=80"
+        },
+        {
+            "id": 2,
+            "price": 200,
+            "name": "Bananananananana",
+            "img": "https://hackmd.io/_uploads/S1Rrdsy-0.png"
+        },
+        {
+            "id": "57184770448808442690769993724733314707076070877175877787110145071997301693807",
+            "price": 300,
+            "name": "Orange",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 4,
+            "price": 400,
+            "name": "Grapes",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 5,
+            "price": 500,
+            "name": "Pineapple",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 6,
+            "price": 600,
+            "name": "Strawberry",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 7,
+            "price": 700,
+            "name": "Watermelon",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 8,
+            "price": 800,
+            "name": "Kiwi",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 9,
+            "price": 900,
+            "name": "Mango",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 10,
+            "price": 1000,
+            "name": "Peach",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 11,
+            "price": 1100,
+            "name": "Cherry",
+            "img": "../../src/lib/images/github.svg"
+        },
+        {
+            "id": 12,
+            "price": 1200,
+            "name": "Blueberry",
+            "img": "../../src/lib/images/github.svg"
+        }
+    ]
+}

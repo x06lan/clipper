@@ -1,5 +1,5 @@
 {
-	"name": "solidity svelte",
+	"name": "solidity_svelte",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -12,7 +12,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"@openzeppelin/contracts": "^5.0.2",
-		"svelte-web3": "^4.3.1",
+		"svelte-web3": "^4.1.1",
 		"vite-plugin-dts": "^3.3.1",
 		"vite-tsconfig-paths": "^4.2.0"
 	},

@@ -10,11 +10,9 @@
   import IERC20 from "@openzeppelin/contracts/build/contracts/IERC20.json";
   //
   // const LINKTOKEN_ADDRESS_ON_GOERLI = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB'
-  const CONTRACT_ADDRESS = "0x52c5463117D7Fca98Cc1568AfeAd0915E070Eb7E";
-  import { abi } from "../../../contract/artifacts/contracts/movie..sol/MovieToken.json";
+  import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils.js";
   // evm.attachContract('link', LINKTOKEN_ADDRESS_ON_GOERLI, IERC20.abi)
-  console.log("abi", abi);
-  evm.attachContract("link", CONTRACT_ADDRESS, abi);
+  evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 </script>
 
 <div class="content">
@@ -35,8 +33,8 @@
   </code></pre>
 
   {#if $connected}
-    {#if $contracts.link}
-      {#await $contracts.link.methods.name().call()}
+    {#if $contracts.Clipper}
+      {#await $contracts.Clipper.methods.name().call()}
         <span>waiting for $contracts.link.methods.name().call() Promise...</span
         >
       {:then name}
