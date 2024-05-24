@@ -4,6 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"build": "npm run build -w packages/contract && npm run build -w packages/frontend",
 		"format": "prettier . --list-different",
 		"lint": "eslint"
 	},
