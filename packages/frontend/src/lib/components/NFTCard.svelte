@@ -75,11 +75,10 @@
   </a>
 {:else if variant === "select"}
   <!-- svelte-ignore a11y-invalid-attribute -->
-  <a
+  <button
     class="w-full relative"
     role="button"
     tabindex="-1"
-    href="#"
     on:mouseover={() => {
       isHovered = true;
     }}
@@ -110,7 +109,11 @@
             alt={name}
           />
         {:else}
-          <SimplePlayer {videos} css={"aspect-square w-full"} />
+          <SimplePlayer
+            {videos}
+            css={"aspect-square w-full"}
+            controls={false}
+          />
         {/if}
       </div>
       <div class="mt-4 w-full text-center text-white">
@@ -123,5 +126,5 @@
         <p class="mt-2 text-gray-400">{price} ETH</p>
       </div>
     </Card.Root>
-  </a>
+  </button>
 {/if}
