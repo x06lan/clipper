@@ -14,6 +14,7 @@
     CONTRACT_ADDRESS,
   } from "$lib/utils.js";
   import Loading from "$lib/components/Loading.svelte";
+  import Button from "$lib/components/ui/button";
   let loading = true;
   onMount(async () => {
     await evm.setProvider();
@@ -22,6 +23,7 @@
     loading = false;
   });
   let nfts = [];
+  let selectedIDs = [];
   async function fetchNFTData() {
     let nftIds = await $contracts.Clipper.methods
       .ownedTokens()
@@ -54,11 +56,13 @@
     selectedCount.update((count) => {
       if (selected) {
         if (count < 2) {
+          selectedIDs.push(id);
           return count + 1;
         } else {
           return count;
         }
       } else {
+        selectedIDs = selectedIDs.filter((item) => item !== id);
         return count - 1;
       }
     });
