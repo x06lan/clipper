@@ -4,7 +4,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview"
+		"preview": "npm run build && wrangler pages dev"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
