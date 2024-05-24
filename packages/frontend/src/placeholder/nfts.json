@@ -16,61 +16,61 @@
             "id": "57184770448808442690769993724733314707076070877175877787110145071997301693807",
             "price": 300,
             "name": "Orange",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 4,
             "price": 400,
             "name": "Grapes",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 5,
             "price": 500,
             "name": "Pineapple",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 6,
             "price": 600,
             "name": "Strawberry",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 7,
             "price": 700,
             "name": "Watermelon",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 8,
             "price": 800,
             "name": "Kiwi",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 9,
             "price": 900,
             "name": "Mango",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 10,
             "price": 1000,
             "name": "Peach",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 11,
             "price": 1100,
             "name": "Cherry",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         },
         {
             "id": 12,
             "price": 1200,
             "name": "Blueberry",
-            "img": "../../src/lib/images/github.svg"
+            "img": "/static/images/github.svg"
         }
     ]
 }
