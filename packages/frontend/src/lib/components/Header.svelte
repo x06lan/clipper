@@ -4,6 +4,7 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
   import LifeBuoy from "lucide-svelte/icons/life-buoy";
+  import FoldHorizontal from "lucide-svelte/icons/fold-horizontal";
   import { Clapperboard, BadgePlus, Wallet, BadgeCheck } from "lucide-svelte";
   import { page } from "$app/stores"; // Import the $page store
   import { defaultEvmStores, connected } from "svelte-web3"; // Adjust the import as needed
@@ -66,6 +67,11 @@
             <span>Create NFT</span>
           </DropdownMenu.Item>
         </a>
+
+        <DropdownMenu.Item href="/nft/merge">
+          <FoldHorizontal class="mr-2 h-4 w-4" />
+          <span>Merge NFTs</span>
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   </div>

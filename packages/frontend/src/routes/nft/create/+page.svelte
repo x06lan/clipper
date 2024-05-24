@@ -18,7 +18,6 @@
     selectedAccount,
   } from "svelte-web3";
   onMount(() => {
-    // add a test to return in SSR context
     evm.setProvider();
   });
   let thumbnailPreview = writable(null);
@@ -106,6 +105,7 @@
       })
       .on("error", (error) => {
         console.error("Error minting NFT:", error);
+        minting = false;
       });
     return result.events.Transfer.returnValues.tokenId;
   }
