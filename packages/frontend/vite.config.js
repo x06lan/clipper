@@ -6,7 +6,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api/ipfs/add": {
-				target: "http://api.ipfs.x06lan.com/api/v0/add",
+				target: "https://api_ipfs.x06lan.com/api/v0/add",
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/api\/ipfs\/add/, "")
 			},

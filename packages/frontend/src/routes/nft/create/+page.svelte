@@ -18,7 +18,6 @@
     selectedAccount,
   } from "svelte-web3";
   onMount(() => {
-    // add a test to return in SSR context
     evm.setProvider();
   });
   let thumbnailPreview = writable(null);
@@ -106,6 +105,7 @@
       })
       .on("error", (error) => {
         console.error("Error minting NFT:", error);
+        minting = false;
       });
     return result.events.Transfer.returnValues.tokenId;
   }
@@ -221,7 +221,7 @@
     <Dialog.Header>
       <Dialog.Title>Mint Success!</Dialog.Title>
       <Dialog.Description class="text-wrap">
-        The NFT has been minted successfully. ID: {tokenId}
+        The NFT has been minted successfully. ID: {tokenId.slice(0, 10)}...
       </Dialog.Description>
       <Button on:click={() => goto(`/myNFT/${tokenId}`)}>View NFT</Button>
       <Button on:click={() => location.reload()}>Mint Another</Button>
