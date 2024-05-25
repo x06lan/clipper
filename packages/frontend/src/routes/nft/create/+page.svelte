@@ -333,6 +333,8 @@
       class="w-full h-60 rounded-md border p-4 overflow-auto"
       on:dragover={handleMediaDragOver}
       on:drop={handleMediaDrop}
+      role="button"
+      tabindex="-1"
     >
       <NFTContainer
         videos={formattedPreviews}
