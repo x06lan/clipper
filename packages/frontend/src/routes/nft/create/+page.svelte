@@ -1,6 +1,6 @@
 <script>
   import { writable } from "svelte/store";
-  import { CircleX, Upload } from "lucide-svelte";
+  import { Upload } from "lucide-svelte";
   import * as Dialog from "$lib/components/ui/dialog";
   import { fly, fade } from "svelte/transition";
   import { Badge } from "$lib/components/ui/badge/index.js";
@@ -112,6 +112,7 @@
         console.error("Error minting NFT:", error);
         minting = false;
       });
+    minting = false;
     return result.events.Transfer.returnValues.tokenId;
   }
 
@@ -193,19 +194,21 @@
     mediaFiles.update((files) => files.filter((_, i) => i !== index));
   }
 
-  let formattedPreviews = [];
-  $: formattedPreviews = $mediaFiles.map((file, index) => {
-    return {
-      id: index,
-      file: file.file,
-      index: index,
-      preview: file.preview,
-      removeFile: removeFile,
-    };
-  });
-
+  const formattedPreviews = writable([]);
+  $: {
+    formattedPreviews.update((previews) => {
+      return $mediaFiles.map((file, index) => {
+        return {
+          id: index,
+          file: file.file,
+          index: index,
+          preview: file.preview,
+          removeFile: removeFile,
+        };
+      });
+    });
+  }
   let minting = false;
-  let test = true;
 </script>
 
 <Dialog.Root

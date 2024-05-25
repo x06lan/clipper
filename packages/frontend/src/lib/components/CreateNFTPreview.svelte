@@ -10,18 +10,16 @@
 </script>
 
 <div
-  role="button"
-  tabindex="0"
   class="video-container flex flex-col items-center bg-gray-800 rounded-lg relative m-2"
 >
   <Badge class="absolute top-2 left-2">
     {index + 1}
   </Badge>
   {#if loading}
-    <img src={loadingGif} alt="Loading..." class="w-24 h-24" />
+    <img src={loadingGif} alt="Loading..." class="object-cover rounded-lg" />
   {/if}
   <video
-    class="w-fill h-40 object-cover rounded-lg"
+    class="w-fill h-40 object-cover rounded-lg {loading ? 'hidden' : ''}"
     src={preview}
     autoplay
     loop
