@@ -79,20 +79,21 @@ export const getMyNFTs = async () => {
 
 export const getNFT = async (id) => {
 }
-
+import { PUBLIC_IPFS_UPLOADS, PUBLIC_IPFS_GATEWAY } from "$env/static/public"
 export const getFileFromIPFS = (cid) => {
-	const url = "https://ipfs.x06lan.com/ipfs/" + cid;
+	// const url = "https://ipfs.x06lan.com/ipfs/" + cid;
 	// const url = "/api/ipfs/get/" + cid;
 	// const url = "https://cloudflare-ipfs.com/ipfs/" + cid;
 	// return (await fetch(url)).blob();
-	return url;
+	// return url;
+	return `${PUBLIC_IPFS_GATEWAY}/${cid}`;
 }
 
 export const uploadToIPFS = async (file) => {
 	const formData = new FormData();
 	formData.append("file", file);
 	try {
-		const response = await fetch("/api/ipfs/add", {
+		const response = await fetch(PUBLIC_IPFS_UPLOADS, {
 			method: "POST",
 			body: formData,
 			redirect: "manual",

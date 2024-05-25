@@ -207,11 +207,11 @@
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title>Mint Success!</Dialog.Title>
-      <Dialog.Description class="text-wrap">
-        The NFT has been minted successfully. ID: {tokenId.slice(0, 10)}...
+      <Dialog.Description class="truncate">
+        The NFT has been minted successfully. <br />Token ID: {tokenId}
       </Dialog.Description>
-      <Button on:click={() => goto(`/myNFT/${tokenId}`)}>View NFT</Button>
-      <Button on:click={() => location.reload()}>Mint Another</Button>
+      <Button on:click={() => goto(`/myNFT`)}>View Owned NFTs 🪙</Button>
+      <Button on:click={() => location.reload()}>Create Another 🚀</Button>
     </Dialog.Header>
   </Dialog.Content>
 </Dialog.Root>

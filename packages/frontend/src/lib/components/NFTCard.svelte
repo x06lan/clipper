@@ -65,7 +65,7 @@
       <div class="mt-4 w-full text-center text-white">
         <div class="text-lg font-bold">{name}</div>
         <div
-          class="uppercase tracking-wide text-sm text-gray-400 font-semibold text-wrap"
+          class="whitespace-nowrap uppercase tracking-wide text-sm overflow-hidden text-gray-400 font-semibold text-ellipsis text-wrap"
         >
           #{s_id}
         </div>
@@ -118,7 +118,7 @@
       <div class="mt-4 w-full text-center text-white">
         <div class="text-lg font-bold">{name}</div>
         <div
-          class="uppercase tracking-wide text-sm text-gray-400 font-semibold text-wrap"
+          class="uppercase tracking-wide text-sm text-gray-400 font-semibold text-wrap overflow-hidden text-ellipsis"
         >
           #{s_id}
         </div>

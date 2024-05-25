@@ -190,14 +190,11 @@
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title>Mint Success!</Dialog.Title>
-      <Dialog.Description class="text-wrap">
-        The NFT has been fused successfully.<br /> New token ID: {tokenId.slice(
-          0,
-          10
-        )}...
+      <Dialog.Description class="truncate">
+        The NFT has been fused successfully.<br /> New token ID: {tokenId}
       </Dialog.Description>
-      <Button on:click={() => goto(`/myNFT/${tokenId}`)}>View NFT</Button>
-      <Button on:click={() => location.reload()}>Mint Another</Button>
+      <Button on:click={() => goto(`/myNFT`)}>View Owned NFT</Button>
+      <Button on:click={() => location.reload()}>Fuse Another</Button>
     </Dialog.Header>
   </Dialog.Content>
 </Dialog.Root>
@@ -225,41 +222,43 @@
       {/each}
     </div>
   </div>
-  <Button
-    variant="default"
-    class="w-full items-center lg:w-1/2 mx-auto"
-    on:click={() => {
-      if (selectedIDs.length !== 2) {
-        showErrorDialog.set(true);
-        errorMessage.set("Please select exactly 2 NFTs to fuse.");
-        return;
-      }
-      fusing = true;
-      clips1.set(findNftById(selectedIDs[0]).videos);
-      clips2.set(findNftById(selectedIDs[1]).videos);
-      let idx = 0;
-      clips1.update((clips) =>
-        clips.map((c) => ({
-          id: idx++,
-          clip: c.clip,
-          name: c.name,
-          cid: c.cid,
-        }))
-      );
-      clips2.update((clips) =>
-        clips.map((c) => ({
-          id: idx++,
-          clip: c.clip,
-          name: c.name,
-          cid: c.cid,
-        }))
-      );
-      isFusable = false;
-      expectedLength = $clips1.length + $clips2.length;
-    }}
-  >
-    Fuse
-  </Button>
+  {#if !loading}
+    <Button
+      variant="default"
+      class="w-full items-center lg:w-1/2 mx-auto"
+      on:click={() => {
+        if (selectedIDs.length !== 2) {
+          showErrorDialog.set(true);
+          errorMessage.set("Please select exactly 2 NFTs to fuse.");
+          return;
+        }
+        fusing = true;
+        clips1.set(findNftById(selectedIDs[0]).videos);
+        clips2.set(findNftById(selectedIDs[1]).videos);
+        let idx = 0;
+        clips1.update((clips) =>
+          clips.map((c) => ({
+            id: idx++,
+            clip: c.clip,
+            name: c.name,
+            cid: c.cid,
+          }))
+        );
+        clips2.update((clips) =>
+          clips.map((c) => ({
+            id: idx++,
+            clip: c.clip,
+            name: c.name,
+            cid: c.cid,
+          }))
+        );
+        isFusable = false;
+        expectedLength = $clips1.length + $clips2.length;
+      }}
+    >
+      Fuse
+    </Button>
+  {/if}
 {:else}
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">
@@ -324,12 +323,14 @@
         />
       </div>
     </div>
-    <Button
-      variant="primary"
-      class="w-full items-center mt-2 mx-auto"
-      on:click={fuse}
-    >
-      Confirm Fuse
-    </Button>
+    {#if !loading}
+      <Button
+        variant="primary"
+        class="w-full items-center mt-2 mx-auto"
+        on:click={fuse}
+      >
+        Confirm Fuse
+      </Button>
+    {/if}
   </div>
 {/if}
