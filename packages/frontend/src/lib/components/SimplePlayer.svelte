@@ -8,11 +8,18 @@
   }
   export let controls = true;
   export let css = "";
+  import loadingGif from "$lib/images/loading.gif";
+  let loading = true;
 </script>
 
+{#if loading}
+  <img src={loadingGif} alt="Loading..." class="{css} w-full aspect-square" />
+{/if}
 {#if controls}
   <video
-    class="{css} transition-transform duration-200 ease-in-out"
+    class="{css} transition-transform duration-200 ease-in-out {loading
+      ? 'hidden'
+      : ''}"
     src={videos[videoIndex]}
     preload="auto"
     muted
@@ -21,16 +28,20 @@
     controls
     controlslist="nodownload"
     on:ended={handleVideoEnded}
+    on:loadeddata={() => (loading = false)}
   ></video>
 {:else}
   <video
-    class="{css} aspect-square w-full object-cover hover:scale-105 transition-transform duration-200 ease-in-out"
+    class="{css}  w-full object-cover hover:scale-105 transition-transform duration-200 ease-in-out {loading
+      ? 'hidden'
+      : ''}"
     src={videos[videoIndex]}
     preload="auto"
     muted
     autoplay
     playsinline
     on:ended={handleVideoEnded}
+    on:loadeddata={() => (loading = false)}
   ></video>
 {/if}
 <video

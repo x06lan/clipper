@@ -10,6 +10,8 @@
   import { onMount } from "svelte";
   import Loading from "$lib/components/Loading.svelte";
   import { goto } from "$app/navigation";
+  import CreateNftPreview from "$lib/components/CreateNFTPreview.svelte";
+  import NFTContainer from "$lib/components/NFTContainer.svelte";
 
   import {
     defaultEvmStores as evm,
@@ -31,7 +33,10 @@
   evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 
   async function _mint(nftName, description, clips, thumbnail) {
-    const clipsArray = clips.map((clip) => [clip.file.name, clip.file]);
+    const clipsArray = $mediaFiles.map((file) => [
+      file.file.name,
+      file.preview,
+    ]);
 
     const uploadToIPFS = async (file) => {
       const formData = new FormData();
@@ -171,7 +176,6 @@
   }
 
   function handleMediaDragOver(event, index) {
-    console.log(mediaFiles);
     event.preventDefault();
     hoverIndex.set(index);
     if (dragIndex !== null && $dragIndex !== index) {
@@ -185,29 +189,23 @@
     }
   }
 
-  function handleDragStart(event, index) {
-    dragIndex.set(index);
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", index);
-  }
-
-  function handleDrop(event, index) {
-    event.preventDefault();
-    const fromIndex = event.dataTransfer.getData("text/plain");
-    mediaFiles.update((currentFiles) => {
-      const reorderedFiles = [...currentFiles];
-      const [movedItem] = reorderedFiles.splice(fromIndex, 1);
-      reorderedFiles.splice(index, 0, movedItem);
-      return reorderedFiles;
-    });
-    dragIndex.set(null);
-    hoverIndex.set(null);
-  }
-
   function removeFile(index) {
     mediaFiles.update((files) => files.filter((_, i) => i !== index));
   }
+
+  let formattedPreviews = [];
+  $: formattedPreviews = $mediaFiles.map((file, index) => {
+    return {
+      id: index,
+      file: file.file,
+      index: index,
+      preview: file.preview,
+      removeFile: removeFile,
+    };
+  });
+
   let minting = false;
+  let test = true;
 </script>
 
 <Dialog.Root
@@ -342,72 +340,13 @@
       />
     </div>
 
-    <div class="w-full h-72 rounded-md border p-4 overflow-auto">
-      <div
-        class="rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-      >
-        {#each $mediaFiles as { file, preview }, index (file.name)}
-          <div
-            role="button"
-            tabindex="0"
-            class="video-container flex flex-col items-center bg-gray-800 rounded-lg relative m-2"
-            in:fly={{ x: 50 }}
-            out:fade={{ x: -50 }}
-            draggable="true"
-            on:dragstart={(event) => handleDragStart(event, index)}
-            on:dragover={(event) => handleMediaDragOver(event, index)}
-            on:drop={(event) => handleDrop(event, index)}
-          >
-            <Badge class="absolute top-2 left-2">
-              {index + 1}
-            </Badge>
-            <video
-              class="w-fill h-40 object-cover rounded-lg"
-              src={preview}
-              autoplay
-              loop
-              muted
-            />
-            <span
-              class="mt-1 text-center text-white overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-xs"
-            >
-              {file.name}
-            </span>
-            <button
-              type="button"
-              class="absolute top-2 right-2 text-white rounded-full p-1"
-              on:click={() => removeFile(index)}
-            >
-              <CircleX class="w-4 h-4" />
-            </button>
-          </div>
-        {/each}
-        {#if $hoverIndex !== null}
-          <div
-            class="drag-indicator"
-            style={`left: calc(${$hoverIndex} * (100% / ${mediaFiles.length} + 1rem))`}
-          ></div>
-        {/if}
-      </div>
+    <div class="w-full h-60 rounded-md border p-4 overflow-auto">
+      <NFTContainer
+        videos={formattedPreviews}
+        variant="create"
+        css="rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"
+      />
     </div>
     <Button on:click={mint} class="w-full mt-2">Create NFT</Button>
   </div>
 </div>
-
-<style>
-  .drag-indicator {
-    height: 100%;
-    width: 4px;
-    background-color: blue;
-    position: absolute;
-    z-index: 10;
-    transition: left 0.2s ease;
-  }
-  .video-container {
-    position: relative;
-    transition: transform 0.2s ease;
-  }
-  .video-container:hover {
-    transform: scale(1.05);
-  }
-</style>

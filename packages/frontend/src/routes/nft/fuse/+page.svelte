@@ -25,7 +25,7 @@
   let clips2 = [];
   let clipsResult = [];
   let nftName = "";
-  let thumbnailPreview = null;
+  let thumbnailPreview = writable(null);
 
   const thumbnail = writable(null);
   onMount(async () => {
@@ -226,79 +226,78 @@
     Merge
   </Button>
 {:else}
-  <div
-    class="mb-4 border-2 border-dashed border-gray-500 rounded-lg p-4 text-center"
-    role="button"
-    tabindex="0"
-    on:dragover={handleThumbnailDrop}
-    on:drop={handleThumbnailDrop}
-  >
-    <label for="thumbnail-upload" class="block text-sm font-medium mb-1">
-      Upload Thumbnail
-    </label>
-    <input
-      type="file"
-      accept="image/*"
-      on:change={handleThumbnailChange}
-      class="hidden"
-      id="thumbnail-upload"
-    />
-    <label for="thumbnail-upload" class="cursor-pointer">
-      <div class="flex flex-col items-center justify-center h-full">
-        {#if thumbnailPreview}
-          <img
-            src={thumbnailPreview}
-            alt="Thumbnail Preview"
-            class="w-full h-108 object-cover rounded-lg mb-2"
-          />
-        {:else}
-          <Upload class="w-16 h-16 mb-2" />
-          <p class="text-gray-400">
-            Drag and drop media<br />or<br /><span
-              class="text-blue-400 underline">Browse files</span
-            >
-          </p>
-          <p class="text-gray-400 text-sm">
-            Max size: 50MB<br />JPG, PNG, GIF, SVG, MP4
-          </p>
-        {/if}
-      </div>
-    </label>
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">
+      Token <span class="text-gray-500">
+        #{selectedIDs[0]}
+      </span>
+    </h1>
+    <NftContainer videos={clips1} />
+    <h1 class="text-2xl font-bold mb-4">
+      Token <span class="text-gray-500">
+        #{selectedIDs[1]}
+      </span>
+    </h1>
+    <NftContainer videos={clips2} />
+    <h1 class="mt-2 text-2xl font-bold mb-4">Fused Token</h1>
+    <NftContainer videos={clipsResult} />
+    <div
+      class="mt-4 mb-4 border-2 border-dashed border-gray-500 rounded-lg p-4 text-center"
+      role="button"
+      tabindex="0"
+      on:dragover={handleThumbnailDrop}
+      on:drop={handleThumbnailDrop}
+    >
+      <label for="thumbnail-upload" class="block text-sm font-medium mb-1">
+        Upload Thumbnail
+      </label>
+      <input
+        type="file"
+        accept="image/*"
+        on:change={handleThumbnailChange}
+        class="hidden"
+        id="thumbnail-upload"
+      />
+      <label for="thumbnail-upload" class="cursor-pointer">
+        <div class="flex flex-col items-center justify-center h-full">
+          {#if $thumbnailPreview}
+            <img
+              src={$thumbnailPreview}
+              alt="Thumbnail Preview"
+              class="h-full object-cover rounded-lg mb-2"
+            />
+          {:else}
+            <Upload class="w-16 h-16 mb-2" />
+            <p class="text-gray-400">
+              Drag and drop media<br />or<br /><span
+                class="text-blue-400 underline">Browse files</span
+              >
+            </p>
+            <p class="text-gray-400 text-sm">
+              Max size: 50MB<br />JPG, PNG, GIF, SVG, MP4
+            </p>
+          {/if}
+        </div>
+      </label>
+    </div>
+    <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
+    <Textarea class="mt-1 border p-8" bind:value={nftName} />
+    {#if clips1.length == 0 && clips2.length == 0}
+      <Button
+        variant="primary"
+        class="w-full items-center lg:w-1/2 mx-auto"
+        on:click={fuse}
+      >
+        Confirm Fuse
+      </Button>
+    {:else}
+      <Button
+        variant="default"
+        class="w-full items-center lg:w-1/2 mx-auto"
+        disabled
+      >
+        Confirm Fuse
+      </Button>
+    {/if}
   </div>
-  <h1 class="text-2xl font-bold mb-4">
-    Token <span class="text-gray-500">
-      #{selectedIDs[0]}
-    </span>
-  </h1>
-  <NftContainer videos={clips1} />
-  <h1 class="text-2xl font-bold mb-4">
-    Token <span class="text-gray-500">
-      #{selectedIDs[1]}
-    </span>
-  </h1>
-  <NftContainer videos={clips2} />
-  <h1 class="text-2xl font-bold mb-4">Fused Token</h1>
-  <NftContainer videos={clipsResult} />
-  <Textarea
-    class="mt-1 border p-8"
-    placeholder="Enter NFT name"
-    bind:value={nftName}
-  />
-  {#if clips1.length == 0 && clips2.length == 0}
-    <Button
-      variant="primary"
-      class="w-full items-center lg:w-1/2 mx-auto"
-      on:click={fuse}
-    >
-      Confirm Fuse
-    </Button>
-  {:else}
-    <Button
-      variant="default"
-      class="w-full items-center lg:w-1/2 mx-auto"
-      disabled
-    >
-      Confirm Fuse
-    </Button>
-  {/if}
 {/if}
