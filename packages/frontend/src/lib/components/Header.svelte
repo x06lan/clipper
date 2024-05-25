@@ -12,7 +12,7 @@
   export { className as class };
   import { onMount } from "svelte";
   onMount(() => {
-    defaultEvmStores.setProvider();
+    // defaultEvmStores.setProvider();
   });
 </script>
 

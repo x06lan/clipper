@@ -125,17 +125,17 @@
 
   let fusing = false;
   let executing = false;
+  let tokenId = null;
 
   async function _fuse() {
     const clipsArray = $clipsResult.map((clip) => clip.cid);
 
     // Upload thumbnail to IPFS
-    const thumbnailCid = await uploadToIPFS(thumbnail);
+    const thumbnailCid = await uploadToIPFS($thumbnail);
     if (!thumbnailCid) {
       console.error("Failed to upload thumbnail to IPFS");
       return; // or handle the error as needed
     }
-
     let seed = Math.floor(Math.random() * 1000000000);
     const result = await $contracts.Clipper.methods
       .fuse(
@@ -157,10 +157,9 @@
         console.error("Error minting NFT:", error);
         executing = false;
       });
-    return result.events.Transfer.returnValues.tokenId;
+    console.log("Result:", result.events.Transfer.returnValues.tokenId);
+    return result.events.Transfer.returnValues.tokenId.toString().slice(0, -1);
   }
-
-  let tokenId = null;
 
   const fuse = async () => {
     // find the third section and count the videos
@@ -205,7 +204,8 @@
 
 {#if loading || executing}
   <Loading />
-{:else if !fusing}
+{/if}
+{#if !fusing}
   <div class="container mx-auto p-4">
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"

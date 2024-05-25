@@ -23,8 +23,6 @@
     evm.setProvider();
   });
   let thumbnailPreview = writable(null);
-  let dragIndex = writable(null);
-  let hoverIndex = writable(null);
   let tokenId = null;
   const nftName = writable("");
   const description = writable("");
@@ -33,10 +31,7 @@
   evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 
   async function _mint(nftName, description, clips, thumbnail) {
-    const clipsArray = $mediaFiles.map((file) => [
-      file.file.name,
-      file.preview,
-    ]);
+    const clipsArray = $mediaFiles.map((f) => [f.file.name, f.file]);
 
     const uploadToIPFS = async (file) => {
       const formData = new FormData();
@@ -111,9 +106,10 @@
       .on("error", (error) => {
         console.error("Error minting NFT:", error);
         minting = false;
+        return null;
       });
     minting = false;
-    return result.events.Transfer.returnValues.tokenId;
+    return result.events.Transfer.returnValues.tokenId.toString().slice(0, -1);
   }
 
   const mint = async () => {
@@ -170,7 +166,7 @@
       return [
         ...currentFiles,
         ...newFiles.filter(
-          (file) => !currentFiles.find((f) => f.file.name === file.name)
+          (nf) => !currentFiles.find((cf) => cf.file.name === nf.file.name)
         ),
       ];
     });
@@ -178,16 +174,6 @@
 
   function handleMediaDragOver(event, index) {
     event.preventDefault();
-    hoverIndex.set(index);
-    if (dragIndex !== null && $dragIndex !== index) {
-      mediaFiles.update((files) => {
-        const reorderedFiles = [...files];
-        const [movedItem] = reorderedFiles.splice(dragIndex, 1);
-        reorderedFiles.splice(index, 0, movedItem);
-        dragIndex.set(index);
-        return reorderedFiles;
-      });
-    }
   }
 
   function removeFile(index) {
@@ -343,7 +329,11 @@
       />
     </div>
 
-    <div class="w-full h-60 rounded-md border p-4 overflow-auto">
+    <div
+      class="w-full h-60 rounded-md border p-4 overflow-auto"
+      on:dragover={handleMediaDragOver}
+      on:drop={handleMediaDrop}
+    >
       <NFTContainer
         videos={formattedPreviews}
         variant="create"

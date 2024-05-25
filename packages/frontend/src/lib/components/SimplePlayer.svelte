@@ -24,7 +24,6 @@
     preload="auto"
     muted
     autoplay
-    playsinline
     controls
     controlslist="nodownload"
     on:ended={handleVideoEnded}
@@ -39,7 +38,6 @@
     preload="auto"
     muted
     autoplay
-    playsinline
     on:ended={handleVideoEnded}
     on:loadeddata={() => (loading = false)}
   ></video>
