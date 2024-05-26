@@ -117,6 +117,7 @@
     } else {
       isFusable = false;
     }
+    return selectedIDs.length;
   }
 
   function findNftById(id) {
@@ -189,7 +190,7 @@
   <Dialog.Trigger />
   <Dialog.Content>
     <Dialog.Header>
-      <Dialog.Title>Mint Success!</Dialog.Title>
+      <Dialog.Title>Fuse Success!</Dialog.Title>
       <Dialog.Description class="truncate">
         The NFT has been fused successfully.<br /> New token ID: {tokenId}
       </Dialog.Description>

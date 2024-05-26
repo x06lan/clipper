@@ -13,6 +13,7 @@
   import CreateNftPreview from "$lib/components/CreateNFTPreview.svelte";
   import NFTContainer from "$lib/components/NFTContainer.svelte";
 
+  import { uploadToIPFS } from "$lib/utils";
   import {
     defaultEvmStores as evm,
     contracts,
@@ -32,29 +33,6 @@
 
   async function _mint(nftName, description, clips, thumbnail) {
     const clipsArray = $mediaFiles.map((f) => [f.file.name, f.file]);
-
-    const uploadToIPFS = async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const response = await fetch("/api/ipfs/add", {
-          method: "POST",
-          body: formData,
-          redirect: "manual",
-        });
-        if (!response.ok) {
-          if (response.type === "opaqueredirect")
-            throw new Error(
-              "Request was redirected to HTTPS, which is not supported."
-            );
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-      } catch (error) {
-        console.error("Error uploading file to IPFS:", error);
-        return null; // or handle the error as needed
-      }
-    };
 
     // Upload thumbnail to IPFS
     const thumbnailCid = await uploadToIPFS(thumbnail);

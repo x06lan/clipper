@@ -64,7 +64,7 @@
           />
 
           <span
-            class="mt-1 text-center text-white bg-slate-400 overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-xs"
+            class="mt-1 text-center rounded text-white bg-slate-400 overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-xs"
           >
             {item.name}
           </span>

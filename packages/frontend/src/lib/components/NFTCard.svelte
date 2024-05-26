@@ -2,7 +2,7 @@
   import * as Card from "$lib/components/ui/card";
   import SimplePlayer from "./SimplePlayer.svelte";
   import { CircleCheck } from "lucide-svelte";
-  import { get } from "svelte/store";
+  import { get, writable } from "svelte/store";
 
   export let id = null;
   export let name = null;
@@ -19,12 +19,11 @@
 
   // Counter for selected cards
   export let toggleSelect = () => {};
-  export let selectedCount = null;
+  export let selectedCount = writable(0);
   function handleToggleSelect() {
     const count = get(selectedCount);
-    if (selected || (!selected && count < 2)) {
+    if (count !== toggleSelect(id, !selected)) {
       selected = !selected;
-      toggleSelect(id, selected);
     }
   }
 </script>
