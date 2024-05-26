@@ -5,6 +5,11 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
 		proxy: {
+			"/api/ipfs/add": {
+				target: "https://api_ipfs.x06lan.com/api/v0/add",
+				changeOrigin: true,
+				rewrite: path => path.replace(/^\/api\/ipfs\/add/, "")
+			},
 			"/api/ipfs/get":
 			{
 				target: "https://ipfs.x06lan.com/ipfs/",
