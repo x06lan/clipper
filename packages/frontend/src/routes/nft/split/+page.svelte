@@ -152,8 +152,6 @@
 
   let splitting = false;
   let executing = false;
-  let tokenId1 = null;
-  let tokenId2 = null;
 
   async function _split() {
     const clipsArray1 = $clipsResult1.map((clip) => clip.cid);
@@ -175,8 +173,8 @@
         clipsArray2,
         nftName1,
         nftName2,
-        thumbnailCid1.hash,
-        thumbnailCid2.hash
+        thumbnailCid1.Hash,
+        thumbnailCid2.Hash
       )
       .send({ from: $selectedAccount })
       .on("transactionHash", (hash) => {
@@ -190,9 +188,9 @@
         executing = false;
       });
     console.log("Result:", result);
-    return result.events.Transfer.returnValues.tokenId.toString().slice(0, -1);
+    return true;
   }
-
+  let success = false;
   const split = async () => {
     // find the third section and count the videos
     if (
@@ -208,7 +206,7 @@
       return;
     }
     executing = true;
-    tokenId = await _split();
+    success = await _split();
     executing = false;
   };
 </script>
@@ -224,13 +222,13 @@
   </Dialog.Content>
 </Dialog.Root>
 
-<Dialog.Root bind:open={tokenId1}>
+<Dialog.Root bind:open={success}>
   <Dialog.Trigger />
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title>Split Success!</Dialog.Title>
       <Dialog.Description class="truncate">
-        The NFT has been splitted successfully.<br /> New token ID: {tokenId1}
+        The NFT has been splitted successfully.
       </Dialog.Description>
       <Button on:click={() => goto(`/myNFT`)}>View Owned NFT</Button>
       <Button on:click={() => location.reload()}>Fuse Another</Button>
@@ -307,7 +305,7 @@
         />
         <div class="flex">
           <div
-            class="h-60 mt-4 mb-4 border-2 border-dashed border-gray-500 rounded-lg p-4 text-center mr-4"
+            class="h-60 w-90 mt-4 mb-4 border-2 border-dashed border-gray-500 rounded-lg p-4 text-center mr-4"
             role="button"
             tabindex="0"
             on:dragover={handleThumbnail1Drop}
@@ -327,12 +325,14 @@
               id="thumbnail-upload"
             />
             <label for="thumbnail-upload" class="cursor-pointer">
-              <div class="flex flex-col items-center justify-center">
+              <div
+                class="flex flex-col items-center justify-center w-full h-full"
+              >
                 {#if $thumbnailPreview1}
                   <img
                     src={$thumbnailPreview1}
                     alt="Thumbnail Preview"
-                    class="h-fit rounded-lg mb-2"
+                    class="object-contain h-full w-full rounded-lg mb-5 mt-2"
                   />
                 {:else}
                   <Upload class="w-16 h-16 mb-2" />
@@ -345,8 +345,8 @@
                     Max size: 50MB<br />JPG, PNG, GIF, SVG
                   </p>
                 {/if}
-              </div></label
-            >
+              </div>
+            </label>
           </div>
           <div class="flex-grow">
             <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
@@ -385,12 +385,14 @@
               id="thumbnail-upload2"
             />
             <label for="thumbnail-upload2" class="cursor-pointer">
-              <div class="flex flex-col items-center justify-center">
+              <div
+                class="flex flex-col items-center justify-center w-full h-full"
+              >
                 {#if $thumbnailPreview2}
                   <img
                     src={$thumbnailPreview2}
                     alt="Thumbnail Preview2"
-                    class="rounded-lg mb-2"
+                    class="rounded-lg mb-5 h-full w-full object-contain mt-2"
                   />
                 {:else}
                   <Upload class="w-16 h-16 mb-2" />
