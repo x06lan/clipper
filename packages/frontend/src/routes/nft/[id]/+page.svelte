@@ -9,6 +9,7 @@
     defaultEvmStores as evm,
     contracts,
     selectedAccount,
+    web3,
   } from "svelte-web3";
   import {
     getFileFromIPFS,
@@ -61,7 +62,7 @@
       <!-- NFT Details Section -->
       <div class="flex-grow mt-4 lg:mt-0 w-full lg:w-1/2 space-y-4">
         <div class="text-3xl font-bold">{nft.name}</div>
-        <div class="text-lg text-gray-400">#{nft.id}</div>
+        <div class="text-lg text-gray-400 truncate mr-10">#{nft.id}</div>
         <div class="text-gray-500">
           Owned by
           {#await $contracts.Clipper.methods.ownerOf(nft.id).call()}
@@ -73,16 +74,17 @@
           {/await}
         </div>
         <div class="text-xl font-bold flex items-center space-x-2">
-          <span>{nft.price} ETH</span>
+          <span>{$web3.utils.fromWei(nft.price, "ether")} ETH</span>
           <span class="text-sm text-gray-500">{usdPrice}</span>
         </div>
-        <div class="flex space-x-2">
+        <div class="flex space-x-2 mr-8">
           <Button
             variant="primary"
             class="w-full lg:w-1/2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
           >
             Buy now
           </Button>
+
           <Button variant="outline" size="lg" class="w-full lg:w-1/2">
             Make offer
           </Button>

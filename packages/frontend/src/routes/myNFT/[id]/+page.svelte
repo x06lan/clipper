@@ -67,8 +67,15 @@
     listingPrice = listingPrice * 10 ** 18;
     const result = await $contracts.Clipper.methods
       .sell(nft.id, listingPrice)
-      .send({ from: $selectedAccount });
+      .send({ from: $selectedAccount })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.error(error);
+      });
     if (result) {
+      loading = false;
       listSuccess = true;
       nft.selling = true;
       nft.price = listingPrice;

@@ -251,6 +251,7 @@
           img={nft.img}
           videos={nft.videos.map((video) => video.clip)}
           price={nft.price}
+          selling={nft.selling}
           variant="select"
           selected={false}
           {selectedCount}

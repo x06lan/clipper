@@ -11,6 +11,7 @@
     defaultEvmStores as evm,
     contracts,
     selectedAccount,
+    web3,
   } from "svelte-web3";
   import {
     getFileFromIPFS,
@@ -91,6 +92,9 @@
             })
           ),
           price: info.price,
+          selling: info.selling,
+          parent: info.parent,
+          children: info.children,
         };
       })
     );
@@ -215,6 +219,7 @@
           img={nft.img}
           videos={nft.videos.map((video) => video.clip)}
           price={nft.price}
+          selling={nft.selling}
           variant="select"
           selected={false}
           {selectedCount}
