@@ -43,6 +43,9 @@
             })
           ),
           price: info.price,
+          selling: info.selling,
+          children: info.children,
+          parent: info.parent,
         };
       })
     );

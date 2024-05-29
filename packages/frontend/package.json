@@ -26,8 +26,6 @@
 	"dependencies": {
 		"bits-ui": "^0.21.9",
 		"clsx": "^2.1.1",
-		"ethers": "^6.12.1",
-		"ethers-svelte": "^1.0.1",
 		"formsnap": "^1.0.0",
 		"lucide-svelte": "^0.378.0",
 		"qs": "^6.12.1",
