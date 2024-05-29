@@ -24,8 +24,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@wagmi/connectors": "^4.3.9",
-		"@wagmi/core": "^2.9.7",
 		"bits-ui": "^0.21.9",
 		"clsx": "^2.1.1",
 		"ethers": "^6.12.1",
@@ -36,11 +34,8 @@
 		"svelte-lucide": "^1.0.5",
 		"svelte-motion": "^0.12.2",
 		"svelte-web3": "^4.1.1",
-		"sveltekit-superforms": "^2.13.1",
 		"tailwind-merge": "^2.3.0",
 		"tailwind-variants": "^0.2.1",
-		"viem": "^2.10.5",
-		"vite": "^5.2.11",
-		"zod": "^3.23.8"
+		"vite": "^5.2.11"
 	}
 }
