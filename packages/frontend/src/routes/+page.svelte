@@ -51,7 +51,7 @@
 </script>
 
 <svelte:head>
-  <title>Clipper 🎞️</title>
+  <title>Clipper</title>
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 {#if loading}
