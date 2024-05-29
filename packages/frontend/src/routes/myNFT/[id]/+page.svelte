@@ -6,6 +6,7 @@
   import { Label } from "$lib/components/ui/label";
   import { GetUSDExchangeRate } from "$lib/utils.js";
   import * as Dialog from "$lib/components/ui/dialog";
+  import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
   import {
     defaultEvmStores as evm,
     contracts,
@@ -83,6 +84,25 @@
     }
     // invalidateAll();
   }
+  async function cancelListing() {
+    loading = true;
+    const result = await $contracts.Clipper.methods
+      .unsell(nft.id)
+      .send({ from: $selectedAccount })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.error(error);
+      });
+    if (result) {
+      loading = false;
+      listSuccess = false;
+      nft.selling = false;
+      fetchUSDPrice();
+    }
+    // invalidateAll();
+  }
 </script>
 
 {#if loading}
@@ -113,12 +133,32 @@
         {/if}
         <div class="flex space-x-2">
           {#if nft.selling}
-            <Button
-              variant="primary"
-              class="w-full lg:w-1/2 bg-red-500 text-white rounded transition"
-            >
-              Cancel listing
-            </Button>
+            <AlertDialog.Root>
+              <AlertDialog.Trigger asChild let:builder>
+                <Button
+                  builders={[builder]}
+                  variant="primary"
+                  class="w-full lg:w-1/2 bg-red-500 text-white rounded transition"
+                >
+                  Cancel listing
+                </Button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Content>
+                <AlertDialog.Header>
+                  <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title
+                  >
+                  <AlertDialog.Description>
+                    This action will cancel the listing of this NFT.
+                  </AlertDialog.Description>
+                </AlertDialog.Header>
+                <AlertDialog.Footer>
+                  <AlertDialog.Cancel>Back</AlertDialog.Cancel>
+                  <AlertDialog.Action on:click={cancelListing}
+                    >Cancel the listing</AlertDialog.Action
+                  >
+                </AlertDialog.Footer>
+              </AlertDialog.Content>
+            </AlertDialog.Root>
           {:else}
             <Dialog.Root>
               <Dialog.Trigger class={buttonVariants({ variant: "default" })}>
