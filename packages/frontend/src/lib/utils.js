@@ -57,7 +57,7 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 		const response = await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH");
 		const result = await response.json();
 		const usdRate = result.data.rates.USD;
-		return (Number(ethAmount) * parseFloat(usdRate)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
+		return (Number(ethAmount) * parseFloat(usdRate) * 10 ** (-18)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
 	} catch (error) {
 		console.error("Error fetching exchange rate:", error);
 		return "N/A";

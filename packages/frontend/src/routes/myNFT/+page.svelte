@@ -43,6 +43,9 @@
             })
           ),
           price: info.price,
+          selling: info.selling,
+          children: info.children,
+          parent: info.parent,
         };
       })
     );
@@ -57,7 +60,7 @@
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
   >
     {#each nfts as nft}
-      <NftCard {...nft} redirect={"myNFT"} />
+      <NftCard {...nft} redirect={"myNFT"} variant={"animated"} />
     {/each}
   </div>
 </div>
