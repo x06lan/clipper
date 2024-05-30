@@ -11,6 +11,7 @@
     Wallet,
     BadgeCheck,
     UnfoldHorizontal,
+    Store,
   } from "lucide-svelte";
   import { page } from "$app/stores"; // Import the $page store
   import { defaultEvmStores, connected } from "svelte-web3"; // Adjust the import as needed
@@ -26,65 +27,50 @@
 <nav class={cn("flex items-center space-x-4 lg:space-x-6", className)}>
   <a
     href="/"
-    class={`text-sm font-medium transition-colors ${isActive("/", $page.url.pathname)}`}
+    class={`flex text-sm font-medium transition-colors ${isActive("/", $page.url.pathname)}`}
   >
-    Overview
+    <Store class="mr-2 h-5 w-5" />
+    Market Place
   </a>
   <a
-    href="/web3/contracts"
-    class={`text-sm font-medium transition-colors ${isActive("/web3/contracts", $page.url.pathname)}`}
+    href="/myNFT"
+    class={`flex text-sm font-medium transition-colors ${isActive("/myNFT", $page.url.pathname)}`}
   >
-    Contract functions
+    <Clapperboard class="mr-2 h-5 w-5" />
+    My NFTs
   </a>
   <a
-    href="/web3/set"
-    class={`text-sm font-medium transition-colors ${isActive("/web3/set", $page.url.pathname)}`}
+    href="/nft/create"
+    class={`flex text-sm font-medium transition-colors ${isActive("/nft/create", $page.url.pathname)}`}
   >
-    Link wallet
+    <BadgePlus class="mr-2 h-5 w-5" />
+    Create NFT
   </a>
-  {#if !$connected}
-    <Button variant="outline" on:click={connect}>
-      <Wallet class="mr-2 h-4 w-4" />
-      <span> Connect </span>
-    </Button>
-  {:else}
-    <Button variant="ghost">
-      <BadgeCheck class="mr-2 h-4 w-4" />
-      <span> Connected </span>
-    </Button>
-  {/if}
+  <a
+    href="/nft/fuse"
+    class={`flex text-sm font-medium transition-colors ${isActive("/nft/fuse", $page.url.pathname)}`}
+  >
+    <FoldHorizontal class="mr-2 h-5 w-5" />
+    Fuse NFTs
+  </a>
+  <a
+    href="/nft/split"
+    class={`flex text-sm font-medium transition-colors ${isActive("/nft/split", $page.url.pathname)}`}
+  >
+    <UnfoldHorizontal class="mr-2 h-5 w-5" />
+    Split NFT
+  </a>
   <div class="dark">
-    <DropdownMenu.Root class="">
-      <DropdownMenu.Trigger asChild let:builder>
-        <Button builders={[builder]} variant="outline" size="sm">
-          <LifeBuoy />
-        </Button>
-      </DropdownMenu.Trigger>
-
-      <DropdownMenu.Content class="dark w-56 bg-card text-card-foreground">
-        <a href="/myNFT">
-          <DropdownMenu.Item class="hover:bg-muted hover:text-muted-foreground">
-            <Clapperboard class="mr-2 h-4 w-4" />
-            <span>My NFTs</span>
-          </DropdownMenu.Item>
-        </a>
-        <a href="/nft/create">
-          <DropdownMenu.Item>
-            <BadgePlus class="mr-2 h-4 w-4" />
-            <span>Create NFT</span>
-          </DropdownMenu.Item>
-        </a>
-
-        <DropdownMenu.Item href="/nft/fuse">
-          <FoldHorizontal class="mr-2 h-4 w-4" />
-          <span>Fuse NFTs</span>
-        </DropdownMenu.Item>
-
-        <DropdownMenu.Item href="/nft/split">
-          <UnfoldHorizontal class="mr-2 h-4 w-4" />
-          <span>Split NFT</span>
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+    {#if !$connected}
+      <Button variant="outline" on:click={connect}>
+        <Wallet class="mr-2 h-5 w-5" />
+        <span> Connect </span>
+      </Button>
+    {:else}
+      <Button variant="ghost">
+        <BadgeCheck class="mr-2 h-5 w-5" />
+        <span> Connected </span>
+      </Button>
+    {/if}
   </div>
 </nav>

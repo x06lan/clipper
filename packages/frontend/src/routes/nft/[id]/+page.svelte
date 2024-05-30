@@ -64,12 +64,6 @@
       return;
     }
     loading = true;
-    const estimatedGas = await $contracts.Clipper.methods
-      .buySellingToken(nft.id)
-      .estimateGas({
-        value: $web3.utils.toWei(nft.price, "wei"),
-        from: $selectedAccount,
-      });
     const result = await $contracts.Clipper.methods
       .buySellingToken(nft.id)
       .send({
