@@ -1,9 +1,7 @@
 <script lang="js">
   import { cn, isActive } from "$lib/utils.js"; // Import the utility function
   import { connect } from "$lib/components/Connect.svelte";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { Button } from "$lib/components/ui/button";
-  import LifeBuoy from "lucide-svelte/icons/life-buoy";
   import FoldHorizontal from "lucide-svelte/icons/fold-horizontal";
   import {
     Clapperboard,
