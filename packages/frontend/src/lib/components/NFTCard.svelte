@@ -25,6 +25,7 @@
   export let toggleSelect = () => {};
   export let selectedCount = writable(0);
   function handleToggleSelect() {
+    if (selling) return;
     const count = get(selectedCount);
     if (count !== toggleSelect(id, !selected)) {
       selected = !selected;
@@ -51,7 +52,7 @@
   >
     <Card.Root class={css}>
       <div class="flex-shrink-0 w-full relative">
-        {#if !isHovered || !variant === "default"}
+        {#if !isHovered || variant === "default"}
           <img
             class="aspect-square w-full object-cover hover:scale-105 transition-transform duration-200 ease-in-out"
             src={img}
