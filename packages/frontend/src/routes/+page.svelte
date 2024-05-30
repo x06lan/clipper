@@ -57,6 +57,7 @@
 {#if loading}
   <Loading />
 {/if}
+<h1 class="text-8xl font-bold text-center mx-10">NFT Market Place</h1>
 <div class="container mx-auto p-4">
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
