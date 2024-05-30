@@ -64,9 +64,18 @@
       return;
     }
     loading = true;
+    const estimatedGas = await $contracts.Clipper.methods
+      .buySellingToken(nft.id)
+      .estimateGas({
+        value: $web3.utils.toWei(nft.price, "wei"),
+        from: $selectedAccount,
+      });
     const result = await $contracts.Clipper.methods
       .buySellingToken(nft.id)
-      .send({ from: $selectedAccount })
+      .send({
+        from: $selectedAccount,
+        value: $web3.utils.toWei(nft.price, "wei"),
+      })
       .on("transactionHash", (hash) => {
         console.log("Transaction hash: ", hash);
       })
@@ -157,7 +166,10 @@
                   <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title
                   >
                   <AlertDialog.Description>
-                    You will buy this NFT for {nft.price} ETH.
+                    You will buy this NFT for {$web3.utils.fromWei(
+                      nft.price,
+                      "ether"
+                    )} ETH.
                   </AlertDialog.Description>
                 </AlertDialog.Header>
                 <AlertDialog.Footer>

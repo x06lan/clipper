@@ -25,21 +25,11 @@
     let nftIds = await $contracts.Clipper.methods.sellingToken().call();
     nfts = await Promise.all(
       nftIds.map(async (id) => {
-        const info = await $contracts.Clipper.methods
-          .tokenInfo(id)
-          .call({ from: $selectedAccount });
+        const info = await $contracts.Clipper.methods.tokenInfo(id).call();
         return {
           id: id,
           name: info.name,
           img: getFileFromIPFS(info.image_cid),
-          videos: await Promise.all(
-            info.clips.map(async (clip_id) => {
-              const result = await $contracts.Clipper.methods
-                .clipInfo(clip_id)
-                .call({ from: $selectedAccount });
-              return getFileFromIPFS(result.video_cid);
-            })
-          ),
           price: info.price,
           selling: info.selling,
           children: info.children,
