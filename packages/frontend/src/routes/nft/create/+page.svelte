@@ -1,28 +1,27 @@
 <script>
   import { writable } from "svelte/store";
-  import { CircleX, Upload } from "lucide-svelte";
+  import { Upload } from "lucide-svelte";
   import * as Dialog from "$lib/components/ui/dialog";
-  import { fly, fade } from "svelte/transition";
-  import { Badge } from "$lib/components/ui/badge/index.js";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Button } from "$lib/components/ui/button";
   import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils";
   import { onMount } from "svelte";
   import Loading from "$lib/components/Loading.svelte";
   import { goto } from "$app/navigation";
+  import NFTContainer from "$lib/components/NFTContainer.svelte";
 
+  import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
+  import { uploadToIPFS } from "$lib/utils";
   import {
     defaultEvmStores as evm,
     contracts,
-    connected,
     selectedAccount,
   } from "svelte-web3";
+  import AlertDialogCancel from "$lib/components/ui/alert-dialog/alert-dialog-cancel.svelte";
   onMount(() => {
     evm.setProvider();
   });
   let thumbnailPreview = writable(null);
-  let dragIndex = writable(null);
-  let hoverIndex = writable(null);
   let tokenId = null;
   const nftName = writable("");
   const description = writable("");
@@ -31,30 +30,7 @@
   evm.attachContract("Clipper", CONTRACT_ADDRESS, CONTRACT_ABI);
 
   async function _mint(nftName, description, clips, thumbnail) {
-    const clipsArray = clips.map((clip) => [clip.file.name, clip.file]);
-
-    const uploadToIPFS = async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const response = await fetch("/api/ipfs/add", {
-          method: "POST",
-          body: formData,
-          redirect: "manual",
-        });
-        if (!response.ok) {
-          if (response.type === "opaqueredirect")
-            throw new Error(
-              "Request was redirected to HTTPS, which is not supported."
-            );
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-      } catch (error) {
-        console.error("Error uploading file to IPFS:", error);
-        return null; // or handle the error as needed
-      }
-    };
+    const clipsArray = $mediaFiles.map((f) => [f.file.name, f.file]);
 
     // Upload thumbnail to IPFS
     const thumbnailCid = await uploadToIPFS(thumbnail);
@@ -106,11 +82,18 @@
       .on("error", (error) => {
         console.error("Error minting NFT:", error);
         minting = false;
+        return null;
       });
-    return result.events.Transfer.returnValues.tokenId;
+    minting = false;
+    return result.events.Transfer.returnValues.tokenId.toString().slice(0, -1);
   }
 
+  let error = null;
   const mint = async () => {
+    if (!$nftName || !$description || !$thumbnail || !$mediaFiles.length) {
+      error = true;
+      return;
+    }
     minting = true;
     tokenId = await _mint($nftName, $description, $mediaFiles, $thumbnail);
     minting = false;
@@ -164,48 +147,33 @@
       return [
         ...currentFiles,
         ...newFiles.filter(
-          (file) => !currentFiles.find((f) => f.file.name === file.name)
+          (nf) => !currentFiles.find((cf) => cf.file.name === nf.file.name)
         ),
       ];
     });
   }
 
   function handleMediaDragOver(event, index) {
-    console.log(mediaFiles);
     event.preventDefault();
-    hoverIndex.set(index);
-    if (dragIndex !== null && $dragIndex !== index) {
-      mediaFiles.update((files) => {
-        const reorderedFiles = [...files];
-        const [movedItem] = reorderedFiles.splice(dragIndex, 1);
-        reorderedFiles.splice(index, 0, movedItem);
-        dragIndex.set(index);
-        return reorderedFiles;
-      });
-    }
-  }
-
-  function handleDragStart(event, index) {
-    dragIndex.set(index);
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", index);
-  }
-
-  function handleDrop(event, index) {
-    event.preventDefault();
-    const fromIndex = event.dataTransfer.getData("text/plain");
-    mediaFiles.update((currentFiles) => {
-      const reorderedFiles = [...currentFiles];
-      const [movedItem] = reorderedFiles.splice(fromIndex, 1);
-      reorderedFiles.splice(index, 0, movedItem);
-      return reorderedFiles;
-    });
-    dragIndex.set(null);
-    hoverIndex.set(null);
   }
 
   function removeFile(index) {
     mediaFiles.update((files) => files.filter((_, i) => i !== index));
+  }
+
+  const formattedPreviews = writable([]);
+  $: {
+    formattedPreviews.update((previews) => {
+      return $mediaFiles.map((file, index) => {
+        return {
+          id: index,
+          file: file.file,
+          index: index,
+          preview: file.preview,
+          removeFile: removeFile,
+        };
+      });
+    });
   }
   let minting = false;
 </script>
@@ -220,14 +188,37 @@
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title>Mint Success!</Dialog.Title>
-      <Dialog.Description class="text-wrap">
-        The NFT has been minted successfully. ID: {tokenId.slice(0, 10)}...
+      <Dialog.Description class="truncate">
+        The NFT has been minted successfully. <br />Token ID: {tokenId}
       </Dialog.Description>
-      <Button on:click={() => goto(`/myNFT/${tokenId}`)}>View NFT</Button>
-      <Button on:click={() => location.reload()}>Mint Another</Button>
+      <Button on:click={() => goto(`/myNFT`)}>View Owned NFTs 🪙</Button>
+      <Button on:click={() => location.reload()}>Create Another 🚀</Button>
     </Dialog.Header>
   </Dialog.Content>
 </Dialog.Root>
+<AlertDialog.Root
+  bind:open={error}
+  preventScroll={true}
+  closeOnEscape={false}
+  closeOnOutsideClick={false}
+>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Wrong Format!</AlertDialog.Title>
+      <AlertDialog.Description class="truncate">
+        Please fill in all the required fields.
+      </AlertDialog.Description>
+
+      <AlertDialogCancel
+        class="bg-black text-white"
+        on:click={() => {
+          error = false;
+        }}>Back</AlertDialogCancel
+      >
+    </AlertDialog.Header>
+  </AlertDialog.Content>
+</AlertDialog.Root>
 
 {#if minting}
   <Loading />
@@ -342,72 +333,19 @@
       />
     </div>
 
-    <div class="w-full h-72 rounded-md border p-4 overflow-auto">
-      <div
-        class="rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-      >
-        {#each $mediaFiles as { file, preview }, index (file.name)}
-          <div
-            role="button"
-            tabindex="0"
-            class="video-container flex flex-col items-center bg-gray-800 rounded-lg relative m-2"
-            in:fly={{ x: 50 }}
-            out:fade={{ x: -50 }}
-            draggable="true"
-            on:dragstart={(event) => handleDragStart(event, index)}
-            on:dragover={(event) => handleMediaDragOver(event, index)}
-            on:drop={(event) => handleDrop(event, index)}
-          >
-            <Badge class="absolute top-2 left-2">
-              {index + 1}
-            </Badge>
-            <video
-              class="w-fill h-40 object-cover rounded-lg"
-              src={preview}
-              autoplay
-              loop
-              muted
-            />
-            <span
-              class="mt-1 text-center text-white overflow-hidden text-ellipsis whitespace-nowrap w-full max-w-xs"
-            >
-              {file.name}
-            </span>
-            <button
-              type="button"
-              class="absolute top-2 right-2 text-white rounded-full p-1"
-              on:click={() => removeFile(index)}
-            >
-              <CircleX class="w-4 h-4" />
-            </button>
-          </div>
-        {/each}
-        {#if $hoverIndex !== null}
-          <div
-            class="drag-indicator"
-            style={`left: calc(${$hoverIndex} * (100% / ${mediaFiles.length} + 1rem))`}
-          ></div>
-        {/if}
-      </div>
+    <div
+      class="w-full h-60 rounded-md border p-4 overflow-auto"
+      on:dragover={handleMediaDragOver}
+      on:drop={handleMediaDrop}
+      role="button"
+      tabindex="-1"
+    >
+      <NFTContainer
+        videos={formattedPreviews}
+        variant="create"
+        css="rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"
+      />
     </div>
     <Button on:click={mint} class="w-full mt-2">Create NFT</Button>
   </div>
 </div>
-
-<style>
-  .drag-indicator {
-    height: 100%;
-    width: 4px;
-    background-color: blue;
-    position: absolute;
-    z-index: 10;
-    transition: left 0.2s ease;
-  }
-  .video-container {
-    position: relative;
-    transition: transform 0.2s ease;
-  }
-  .video-container:hover {
-    transform: scale(1.05);
-  }
-</style>

@@ -1,12 +1,17 @@
 <script>
-  import { Button } from "$lib/components/ui/button";
+  import { Button, buttonVariants } from "$lib/components/ui/button";
   import SimplePlayer from "$lib/components/SimplePlayer.svelte";
   import { onMount } from "svelte";
+  import { Input } from "$lib/components/ui/input";
+  import { Label } from "$lib/components/ui/label";
   import { GetUSDExchangeRate } from "$lib/utils.js";
+  import * as Dialog from "$lib/components/ui/dialog";
+  import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
   import {
     defaultEvmStores as evm,
     contracts,
     selectedAccount,
+    web3,
   } from "svelte-web3";
   import {
     getFileFromIPFS,
@@ -29,7 +34,10 @@
     usdPrice = "$" + (await GetUSDExchangeRate(nft.price));
   };
 
+  let loading = false;
+  let listSuccess = false;
   async function fetchNFTData() {
+    loading = true;
     let id = data.nftData.id;
     const info = await $contracts.Clipper.methods
       .tokenInfo(id)
@@ -48,10 +56,58 @@
       ),
       price: info.price,
       description: info.description,
+      selling: info.selling,
+      children: info.children,
+      parent: info.parent,
     };
+    loading = false;
+  }
+  let listingPrice = 0;
+  async function listForSale() {
+    loading = true;
+    listingPrice = listingPrice * 10 ** 18;
+    const result = await $contracts.Clipper.methods
+      .sell(nft.id, listingPrice)
+      .send({ from: $selectedAccount })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.error(error);
+      });
+    if (result) {
+      loading = false;
+      listSuccess = true;
+      nft.selling = true;
+      nft.price = listingPrice;
+      fetchUSDPrice();
+    }
+    // invalidateAll();
+  }
+  async function cancelListing() {
+    loading = true;
+    const result = await $contracts.Clipper.methods
+      .unsell(nft.id)
+      .send({ from: $selectedAccount })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (error) => {
+        console.error(error);
+      });
+    if (result) {
+      loading = false;
+      listSuccess = false;
+      nft.selling = false;
+      fetchUSDPrice();
+    }
+    // invalidateAll();
   }
 </script>
 
+{#if loading}
+  <Loading />
+{/if}
 {#if nft}
   <SimplePlayer videos={nft.videos} controls={true} css={"h-[80vh]"} />
 
@@ -69,17 +125,88 @@
             <span class="text-blue-500">{owner}</span>
           {/await}
         </div>
-        <div class="text-xl font-bold flex items-center space-x-2">
-          <span>{nft.price} ETH</span>
-          <span class="text-sm text-gray-500">{usdPrice}</span>
-        </div>
+        {#if nft.selling}
+          <div class="text-xl font-bold flex items-center space-x-2">
+            <span>{$web3.utils.fromWei(nft.price, "ether")} ETH</span>
+            <span class="text-sm text-gray-500">{usdPrice}</span>
+          </div>
+        {/if}
         <div class="flex space-x-2">
-          <Button
-            variant="primary"
-            class="w-full lg:w-1/2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-          >
-            Sell
-          </Button>
+          {#if nft.selling}
+            <AlertDialog.Root>
+              <AlertDialog.Trigger asChild let:builder>
+                <Button
+                  builders={[builder]}
+                  variant="primary"
+                  class="w-full lg:w-1/2 bg-red-500 text-white rounded transition"
+                >
+                  Cancel listing
+                </Button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Content>
+                <AlertDialog.Header>
+                  <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title
+                  >
+                  <AlertDialog.Description>
+                    This action will cancel the listing of this NFT.
+                  </AlertDialog.Description>
+                </AlertDialog.Header>
+                <AlertDialog.Footer>
+                  <AlertDialog.Cancel>Back</AlertDialog.Cancel>
+                  <AlertDialog.Action on:click={cancelListing}
+                    >Cancel the listing</AlertDialog.Action
+                  >
+                </AlertDialog.Footer>
+              </AlertDialog.Content>
+            </AlertDialog.Root>
+          {:else}
+            <Dialog.Root>
+              <Dialog.Trigger class={buttonVariants({ variant: "default" })}>
+                List for sale
+              </Dialog.Trigger>
+              <Dialog.Content>
+                {#if loading}
+                  <Loading />
+                {:else if !listSuccess}
+                  <Dialog.Header>
+                    <Dialog.Title>List for sale</Dialog.Title>
+                    <Dialog.Description>
+                      Enter the price you want to list this NFT for sale.
+                    </Dialog.Description>
+                  </Dialog.Header>
+                  <div class="grid gap-4 py-4">
+                    <Label for="price">Price (ETH)</Label>
+                    <Input type="number" id="price" bind:value={listingPrice} />
+                  </div>
+                  <Dialog.Footer>
+                    <Button
+                      variant="primary"
+                      class="w-full bg-green-500 text-white rounded hover:bg-green-600 transition"
+                      on:click={listForSale}
+                    >
+                      List for sale
+                    </Button>
+                  </Dialog.Footer>
+                {:else}
+                  <Dialog.Header>
+                    <Dialog.Title>Success</Dialog.Title>
+                    <Dialog.Description>
+                      Your NFT has been listed for sale.
+                    </Dialog.Description>
+                  </Dialog.Header>
+                  <Dialog.Footer>
+                    <Button
+                      variant="primary"
+                      class="w-full bg-green-500 text-white rounded hover:bg-green-600 transition"
+                      on:click={() => (listSuccess = false)}
+                    >
+                      Close
+                    </Button>
+                  </Dialog.Footer>
+                {/if}
+              </Dialog.Content>
+            </Dialog.Root>
+          {/if}
         </div>
         <!-- NFT Image Section -->
         <div class="flex-shrink-0 w-full lg:w-2/3 mt-4 lg:mt-0">

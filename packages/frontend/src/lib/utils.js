@@ -1,12 +1,7 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
-import {
-	defaultEvmStores as evm,
-	contracts,
-	connected,
-	selectedAccount,
-} from "svelte-web3";
+
 
 export function cn(...inputs) {
 	return twMerge(clsx(inputs));
@@ -62,7 +57,7 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 		const response = await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH");
 		const result = await response.json();
 		const usdRate = result.data.rates.USD;
-		return (Number(ethAmount) * parseFloat(usdRate)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
+		return (Number(ethAmount) * parseFloat(usdRate) * 10 ** (-18)).toFixed(2); // Convert ETH to USD and format to 2 decimal places
 	} catch (error) {
 		console.error("Error fetching exchange rate:", error);
 		return "N/A";
@@ -79,11 +74,35 @@ export const getMyNFTs = async () => {
 
 export const getNFT = async (id) => {
 }
-
+import { PUBLIC_IPFS_UPLOADS, PUBLIC_IPFS_GATEWAY } from "$env/static/public"
 export const getFileFromIPFS = (cid) => {
-	const url = "https://ipfs.x06lan.com/ipfs/" + cid;
+	// const url = "https://ipfs.x06lan.com/ipfs/" + cid;
 	// const url = "/api/ipfs/get/" + cid;
 	// const url = "https://cloudflare-ipfs.com/ipfs/" + cid;
 	// return (await fetch(url)).blob();
-	return url;
+	// return url;
+	return `${PUBLIC_IPFS_GATEWAY}/${cid}`;
 }
+
+export const uploadToIPFS = async (file) => {
+	const formData = new FormData();
+	formData.append("file", file);
+	try {
+		const response = await fetch(PUBLIC_IPFS_UPLOADS, {
+			method: "POST",
+			body: formData,
+			redirect: "manual",
+		});
+		if (!response.ok) {
+			if (response.type === "opaqueredirect")
+				throw new Error(
+					"Request was redirected to HTTPS, which is not supported."
+				);
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		return await response.json();
+	} catch (error) {
+		console.error("Error uploading file to IPFS:", error);
+		return null; // or handle the error as needed
+	}
+};
