@@ -2,24 +2,22 @@
   import { writable } from "svelte/store";
   import { Upload } from "lucide-svelte";
   import * as Dialog from "$lib/components/ui/dialog";
-  import { fly, fade } from "svelte/transition";
-  import { Badge } from "$lib/components/ui/badge/index.js";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Button } from "$lib/components/ui/button";
   import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils";
   import { onMount } from "svelte";
   import Loading from "$lib/components/Loading.svelte";
   import { goto } from "$app/navigation";
-  import CreateNftPreview from "$lib/components/CreateNFTPreview.svelte";
   import NFTContainer from "$lib/components/NFTContainer.svelte";
 
+  import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
   import { uploadToIPFS } from "$lib/utils";
   import {
     defaultEvmStores as evm,
     contracts,
-    connected,
     selectedAccount,
   } from "svelte-web3";
+  import AlertDialogCancel from "$lib/components/ui/alert-dialog/alert-dialog-cancel.svelte";
   onMount(() => {
     evm.setProvider();
   });
@@ -90,7 +88,12 @@
     return result.events.Transfer.returnValues.tokenId.toString().slice(0, -1);
   }
 
+  let error = null;
   const mint = async () => {
+    if (!$nftName || !$description || !$thumbnail || !$mediaFiles.length) {
+      error = true;
+      return;
+    }
     minting = true;
     tokenId = await _mint($nftName, $description, $mediaFiles, $thumbnail);
     minting = false;
@@ -193,6 +196,29 @@
     </Dialog.Header>
   </Dialog.Content>
 </Dialog.Root>
+<AlertDialog.Root
+  bind:open={error}
+  preventScroll={true}
+  closeOnEscape={false}
+  closeOnOutsideClick={false}
+>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Wrong Format!</AlertDialog.Title>
+      <AlertDialog.Description class="truncate">
+        Please fill in all the required fields.
+      </AlertDialog.Description>
+
+      <AlertDialogCancel
+        class="bg-black text-white"
+        on:click={() => {
+          error = false;
+        }}>Back</AlertDialogCancel
+      >
+    </AlertDialog.Header>
+  </AlertDialog.Content>
+</AlertDialog.Root>
 
 {#if minting}
   <Loading />
