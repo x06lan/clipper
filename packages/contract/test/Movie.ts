@@ -16,8 +16,9 @@ describe("MovieContract", function () {
 
 
     const movieContract = await hre.viem.deployContract("Movie", [owner.account.address]); // Add type assertion to fix the problem
+    const publicClient = await hre.viem.getPublicClient();
 
-    return { movieContract, owner, account1 };
+    return { movieContract, owner, account1, publicClient };
   }
 
   describe("Deployment", function () {
@@ -29,21 +30,32 @@ describe("MovieContract", function () {
   });
   describe("Minting", function () {
     it("Should mint a new token with clips", async function () {
-      const { movieContract, owner, account1 } = await loadFixture(deployMovieTokenFixture);
+      const { movieContract, owner, account1, publicClient } = await loadFixture(deployMovieTokenFixture);
+
+
 
       const clips = [
-        { id: BigInt(1), name: "Clip1", image_cid: "http://clip1.com", video_cid: "http://movie1.com" },
-        { id: BigInt(2), name: "Clip2", image_cid: "http://clip2.com", video_cid: "http://movie2.com" },
-        { id: BigInt(3), name: "Clip3", image_cid: "http://clip3.com", video_cid: "http://movie3.com" },
-        { id: BigInt(4), name: "Clip4", image_cid: "http://clip4.com", video_cid: "http://movie4.com" }
+        { id: BigInt(1), name: "Clip1", clip_url: "http://clip1.com", video_cid: "http://movie1.com" },
+        { id: BigInt(2), name: "Clip2", clip_url: "http://clip2.com", video_cid: "http://movie2.com" },
+        { id: BigInt(3), name: "Clip3", clip_url: "http://clip3.com", video_cid: "http://movie3.com" },
+        { id: BigInt(4), name: "Clip4", clip_url: "http://clip4.com", video_cid: "http://movie4.com" }
       ]
       const seed = BigInt(1);
       const name = "token 1";
+      const desc = "token 1";
       const image = "http://image.com";
+      const json = "http://json.com";
 
-      const id = await movieContract.write.mint([clips, name, image, seed], { account: owner.account.address });
+      const hash = await movieContract.write.mint([clips, name, desc, image, json, seed], { account: publicClient.account });
 
-      expect(id).to.equal(seed);
+
+
+      await publicClient.waitForTransactionReceipt({ hash });
+      const minted = await movieContract.getEvents.TokenMinted;
+
+      // expect(minted.length).to.eq(1);
+      expect(minted).to.be.lengthOf(1);
+
     });
   });
 });
