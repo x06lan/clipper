@@ -35,10 +35,10 @@ describe("MovieContract", function () {
 
 
       const clips = [
-        { id: BigInt(1), name: "Clip1", clip_url: "http://clip1.com", video_cid: "http://movie1.com" },
-        { id: BigInt(2), name: "Clip2", clip_url: "http://clip2.com", video_cid: "http://movie2.com" },
-        { id: BigInt(3), name: "Clip3", clip_url: "http://clip3.com", video_cid: "http://movie3.com" },
-        { id: BigInt(4), name: "Clip4", clip_url: "http://clip4.com", video_cid: "http://movie4.com" }
+        { id: BigInt(1), name: "Clip1", video_cid: "http://movie1.com" },
+        { id: BigInt(2), name: "Clip2", video_cid: "http://movie2.com" },
+        { id: BigInt(3), name: "Clip3", video_cid: "http://movie3.com" },
+        { id: BigInt(4), name: "Clip4", video_cid: "http://movie4.com" }
       ]
       const seed = BigInt(1);
       const name = "token 1";

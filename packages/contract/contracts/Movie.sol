@@ -15,7 +15,6 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         uint256 id;
         string name;
         string video_cid;
-        string clip_url;
     }
 
     struct Token {
@@ -61,7 +60,6 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
     ) ERC721("movie", unicode"🎥") Ownable(initialOwner) {
         // uint256 newSeed= uint256(keccak256(abi.encodePacked(seed)));
         // _seed=newSeed;
-        emit TokenMinted(1, address(this));
     }
 
     modifier tokenOwnerCheck(uint256 tokenId,address addr){
