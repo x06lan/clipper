@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -10,24 +10,27 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Movie is ERC721, ERC721URIStorage, Ownable {
 
 
+
     struct Clip {
         uint256 id;
         string name;
-        string image_cid;
         string video_cid;
     }
 
     struct Token {
         uint256 id;
         string name;
+        string description;
         string image_cid;
+        string token_url;
+
         uint256[] clips;
         uint256 price;
         bool selling;
 
 
         uint256[] children;
-        uint256[] parant;        
+        uint256[] parent;        
     }
 
    
@@ -43,6 +46,12 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
     uint256[] private _sellingToken;
 
     mapping(address => uint256[]) private  _ownedTokens;
+
+
+    event TokenMinted(uint256 indexed tokenId, address indexed owner);
+    event TokenFused(uint256 indexed newTokenId, uint256 indexed tokenIdA, uint256 indexed tokenIdB);
+    event TokenSplit(uint256 indexed newTokenIdLeft, uint256 indexed newTokenIdRight, uint256 indexed sourceId);
+    event TokenSold(uint256 indexed tokenId, address indexed seller, address indexed buyer, uint256 price);
 
 
     constructor(
@@ -108,6 +117,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         _removeSellToken(tokenId);
 
         payable(owner).transfer(msg.value);
+        emit TokenSold(tokenId,owner,msg.sender,msg.value);
         
     }
     function sellingToken ()public view returns(uint256[] memory){
@@ -144,8 +154,9 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         
     
     
-    function mint(Clip[] memory clips, string memory name,string memory image,uint256 seed) public returns(uint256){
+    function mint(Clip[] memory clips, string memory name,string memory image,string memory description,string memory json_url,uint256 seed) public returns(uint256){
         uint256 tokenId= uint256(keccak256(abi.encodePacked(seed)));
+
         require(_availableTokenId(tokenId)==true,"token id is not available");
         
         uint256[] memory order=new uint[](clips.length);
@@ -165,17 +176,20 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:tokenId,
             clips:order,
             name:name,
+            description:description,
             image_cid:image,
+            token_url:json_url,
             price: 0 wei,
             selling:false,
-            parant:new uint256[](2),
+            parent:new uint256[](2),
             children:new uint256[](2)
         });
         _tokens[tokenId]=token;
         _ownedTokens[msg.sender].push(tokenId);
+        emit TokenMinted(tokenId, msg.sender);
         return tokenId;
     }
-    function fuse(uint256 tokenIdA,uint256 tokenIdB,string memory name ,string memory image ,uint256 seed,uint256[] memory clipOrder)tokenOwnerCheck(tokenIdA,msg.sender) tokenOwnerCheck(tokenIdB,msg.sender)  public returns(uint256){  
+    function fuse(uint256 tokenIdA,uint256 tokenIdB,string memory name ,string memory image ,string memory description,string memory json_url,uint256 seed,uint256[] memory clipOrder)tokenOwnerCheck(tokenIdA,msg.sender) tokenOwnerCheck(tokenIdB,msg.sender)  public returns(uint256){  
         
         
         for(uint i=0;i<clipOrder.length;i++){
@@ -203,15 +217,17 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:newTokenId,
             clips:clipOrder,
             name:name,
+            description:description,
             image_cid:image,
+            token_url:json_url,
             price: 0 wei,
             selling:false,
-            parant:new uint256[](2),
+            parent:new uint256[](2),
             children:new uint256[](2)
         });
 
-        token.parant[0]=tokenIdA;
-        token.parant[1]=tokenIdB;
+        token.parent[0]=tokenIdA;
+        token.parent[1]=tokenIdB;
 
         _tokens[tokenIdA].children[0]=newTokenId;
         _tokens[tokenIdB].children[0]=newTokenId;
@@ -227,10 +243,10 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
 
         _tokens[newTokenId]=token;
         _ownedTokens[msg.sender].push(newTokenId);
-
+        emit TokenFused(newTokenId,tokenIdA,tokenIdB);
         return newTokenId;
     }
-    function  split(uint256 sourceId,uint256 seed,uint256[] memory leftClip,uint256[] memory rightClip ,string memory leftName,string memory rightName,string memory leftImage,string memory rightImage)  public returns (uint256 ,uint256){
+    function  split(uint256 sourceId,uint256 seed,uint256[] memory leftClip,uint256[] memory rightClip ,string memory leftName,string memory rightName,string memory rightDescription,string memory leftDescription,string memory rightImage,string memory leftImage,string memory leftJson,string memory rightJson)  public returns (uint256 ,uint256){
         
         // tokenOwnerCheck(sourceId,msg.sender)
         require( _tokens[sourceId].clips.length == (leftClip.length+rightClip.length) ,"left right lenght illegal");
@@ -271,41 +287,46 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             id:newTokenIdLeft,
             clips:leftClip,
             name:leftName,
+            description:leftDescription,
             image_cid:leftImage,
+            token_url:leftJson,
             price: 0 wei,
-            parant:new uint256[](1),
+            parent:new uint256[](1),
             selling:false,
             children:new uint256[](2)
         });
 
-        tokenLeft.parant[0]=sourceId;
+        tokenLeft.parent[0]=sourceId;
         
         Token memory tokenRight =Token({
             id:newTokenIdRight,
             clips:rightClip,
             name:rightName,
+            description:rightDescription,
             image_cid:rightImage,
+            token_url:rightJson,
             price: 0 wei,
-            parant:new uint256[](1),
+            parent:new uint256[](1),
             selling:false,
             children:new uint256[](2)
         });
         
-        tokenRight.parant[0]=sourceId;
+        tokenRight.parent[0]=sourceId;
 
         _tokens[newTokenIdLeft]=tokenLeft;
         _tokens[newTokenIdRight]=tokenRight;
 
         _ownedTokens[msg.sender].push(newTokenIdLeft);
         _ownedTokens[msg.sender].push(newTokenIdRight);
+        emit TokenSplit(newTokenIdLeft,newTokenIdRight,sourceId);
 
         return (newTokenIdLeft,newTokenIdRight);
     }
 
 
 
-    function parant(uint256 tokenId) public view returns(uint256[] memory){
-        return _tokens[tokenId].parant;
+    function parent(uint256 tokenId) public view returns(uint256[] memory){
+        return _tokens[tokenId].parent;
     }
 
     function children(uint256 tokenId) public view returns(uint256[] memory){
@@ -318,7 +339,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         uint256 tokenId
     ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         // require(_availableTokenId(tokenId)==true,"token id not exist");
-        return _tokens[tokenId].image_cid;
+        return _tokens[tokenId].token_url;
         // return super.tokenURI(tokenId);
     }
 
