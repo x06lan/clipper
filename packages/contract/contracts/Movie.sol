@@ -30,7 +30,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
 
 
         uint256[] children;
-        uint256[] parant;        
+        uint256[] parent;        
     }
 
    
@@ -181,7 +181,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             token_url:json_url,
             price: 0 wei,
             selling:false,
-            parant:new uint256[](2),
+            parent:new uint256[](2),
             children:new uint256[](2)
         });
         _tokens[tokenId]=token;
@@ -222,12 +222,12 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             token_url:json_url,
             price: 0 wei,
             selling:false,
-            parant:new uint256[](2),
+            parent:new uint256[](2),
             children:new uint256[](2)
         });
 
-        token.parant[0]=tokenIdA;
-        token.parant[1]=tokenIdB;
+        token.parent[0]=tokenIdA;
+        token.parent[1]=tokenIdB;
 
         _tokens[tokenIdA].children[0]=newTokenId;
         _tokens[tokenIdB].children[0]=newTokenId;
@@ -246,7 +246,7 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
         emit TokenFused(newTokenId,tokenIdA,tokenIdB);
         return newTokenId;
     }
-    function  split(uint256 sourceId,uint256 seed,uint256[] memory leftClip,uint256[] memory rightClip ,string memory leftName,string memory rightName,string memory leftImage,string memory rightDescription,string memory leftDescription,string memory rightImage,string memory leftJson,string memory rightJson)  public returns (uint256 ,uint256){
+    function  split(uint256 sourceId,uint256 seed,uint256[] memory leftClip,uint256[] memory rightClip ,string memory leftName,string memory rightName,string memory rightDescription,string memory leftDescription,string memory rightImage,string memory leftImage,string memory leftJson,string memory rightJson)  public returns (uint256 ,uint256){
         
         // tokenOwnerCheck(sourceId,msg.sender)
         require( _tokens[sourceId].clips.length == (leftClip.length+rightClip.length) ,"left right lenght illegal");
@@ -291,12 +291,12 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             image_cid:leftImage,
             token_url:leftJson,
             price: 0 wei,
-            parant:new uint256[](1),
+            parent:new uint256[](1),
             selling:false,
             children:new uint256[](2)
         });
 
-        tokenLeft.parant[0]=sourceId;
+        tokenLeft.parent[0]=sourceId;
         
         Token memory tokenRight =Token({
             id:newTokenIdRight,
@@ -306,12 +306,12 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
             image_cid:rightImage,
             token_url:rightJson,
             price: 0 wei,
-            parant:new uint256[](1),
+            parent:new uint256[](1),
             selling:false,
             children:new uint256[](2)
         });
         
-        tokenRight.parant[0]=sourceId;
+        tokenRight.parent[0]=sourceId;
 
         _tokens[newTokenIdLeft]=tokenLeft;
         _tokens[newTokenIdRight]=tokenRight;
@@ -325,8 +325,8 @@ contract Movie is ERC721, ERC721URIStorage, Ownable {
 
 
 
-    function parant(uint256 tokenId) public view returns(uint256[] memory){
-        return _tokens[tokenId].parant;
+    function parent(uint256 tokenId) public view returns(uint256[] memory){
+        return _tokens[tokenId].parent;
     }
 
     function children(uint256 tokenId) public view returns(uint256[] memory){
