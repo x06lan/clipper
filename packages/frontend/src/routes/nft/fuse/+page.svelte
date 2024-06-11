@@ -18,6 +18,7 @@
     CONTRACT_ABI,
     CONTRACT_ADDRESS,
     uploadToIPFS,
+    constructTokenURI,
   } from "$lib/utils.js";
   import Loading from "$lib/components/Loading.svelte";
   import Textarea from "$lib/components/ui/textarea/textarea.svelte";
@@ -142,12 +143,20 @@
       return; // or handle the error as needed
     }
     let seed = Math.floor(Math.random() * 1000000000);
+    let tokenURI = constructTokenURI(
+      nftName,
+      thumbnailCid.Hash,
+      "",
+      getFileFromIPFS(clipsArray[0])
+    );
     const result = await $contracts.Clipper.methods
       .fuse(
         selectedIDs[0],
         selectedIDs[1],
         nftName,
         thumbnailCid.Hash,
+        "", // description FIXME
+        tokenURI,
         seed,
         clipsArray
       )

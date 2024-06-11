@@ -17,6 +17,7 @@
     CONTRACT_ABI,
     CONTRACT_ADDRESS,
     uploadToIPFS,
+    constructTokenURI,
   } from "$lib/utils.js";
   import Loading from "$lib/components/Loading.svelte";
   import Textarea from "$lib/components/ui/textarea/textarea.svelte";
@@ -27,6 +28,8 @@
   let isSplittable = false;
   let nftName1 = "";
   let nftName2 = "";
+  let leftNFTdescription = "";
+  let rightNFTdescription = "";
   let thumbnailPreview1 = writable(null);
   let thumbnailPreview2 = writable(null);
 
@@ -115,8 +118,6 @@
           ),
           price: info.price,
           selling: info.selling,
-          children: info.children,
-          parent: info.parent,
         };
       })
     );
@@ -165,6 +166,18 @@
       return; // or handle the error as needed
     }
     let seed = Math.floor(Math.random() * 1000000000);
+    leftTokenURI = await constructTokenURI(
+      nftName1,
+      thumbnailCid1.Hash,
+      leftNFTdescription,
+      clipsArray1[0]
+    );
+    rightTokenURI = await constructTokenURI(
+      nftName2,
+      thumbnailCid2.Hash,
+      rightNFTdescription,
+      clipsArray2[0]
+    );
     const result = await $contracts.Clipper.methods
       .split(
         selectedID,
@@ -173,8 +186,12 @@
         clipsArray2,
         nftName1,
         nftName2,
+        "➡️", // right description FIXME
+        "⬅️", // left description FIXME
+        thumbnailCid2.Hash,
         thumbnailCid1.Hash,
-        thumbnailCid2.Hash
+        leftTokenURI,
+        rightTokenURI
       )
       .send({ from: $selectedAccount })
       .on("transactionHash", (hash) => {

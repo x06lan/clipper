@@ -68,15 +68,22 @@
         video_cid: clip[1],
       };
     });
-    let tokenURI = constructTokenURI(
+    let tokenURI = await constructTokenURI(
       nftName,
       getFileFromIPFS(thumbnailCid.Hash),
       description,
       getFileFromIPFS(formattedClips[0].video_cid)
     );
-    console.log(formattedClips, nftName, thumbnailCid.Hash, seed);
+    console.log(
+      formattedClips,
+      nftName,
+      thumbnailCid.Hash,
+      description,
+      tokenURI,
+      seed
+    );
     const result = await $contracts.Clipper.methods
-      .mint(formattedClips, nftName, thumbnailCid.Hash, seed)
+      .mint(formattedClips, nftName, thumbnailCid.Hash, description, tokenURI, seed)
       .send({ from: $selectedAccount })
       .on("transactionHash", (hash) => {
         console.log("Transaction hash:", hash);

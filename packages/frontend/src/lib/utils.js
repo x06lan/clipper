@@ -65,7 +65,7 @@ export const GetUSDExchangeRate = async (ethAmount) => {
 };
 
 import { abi } from "../../../contract/artifacts/contracts/Movie.sol/Movie.json";
-export const CONTRACT_ADDRESS = "0xba4cea22e6535D551DD0723502c74D560049861b";
+export const CONTRACT_ADDRESS = "0x9068E125059FEfbF5f72CB05058306Ef0De42b84";
 export const CONTRACT_ABI = abi;
 
 
@@ -91,15 +91,16 @@ export const constructTokenURI = async (name, image, description, animation_url)
 		description,
 		animation_url,
 	};
+	// construct the json as a file
+	const formData = new FormData();
+	formData.append("file", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
 	const response = await fetch(PUBLIC_IPFS_UPLOADS, {
 		method: "POST",
-		body: JSON.stringify(metadata),
-		headers: {
-			"Content-Type": "application/json",
-		},
+		body: formData,
 	});
-	const { cid } = await response.json();
-	return `${PUBLIC_IPFS_GATEWAY}/${cid}`;
+
+	const cid = await response.json();
+	return `${PUBLIC_IPFS_GATEWAY}/${cid.Hash}`;
 }
 
 export const uploadToIPFS = async (file) => {
