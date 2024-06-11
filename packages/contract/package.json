@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "build": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "coverage": "SOLIDITY_COVERAGE=TRUE hardhat coverage"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
