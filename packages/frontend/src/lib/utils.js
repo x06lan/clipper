@@ -84,6 +84,24 @@ export const getFileFromIPFS = (cid) => {
 	return `${PUBLIC_IPFS_GATEWAY}/${cid}`;
 }
 
+export const constructTokenURI = async (name, image, description, animation_url) => {
+	const metadata = {
+		name,
+		image,
+		description,
+		animation_url,
+	};
+	const response = await fetch(PUBLIC_IPFS_UPLOADS, {
+		method: "POST",
+		body: JSON.stringify(metadata),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	const { cid } = await response.json();
+	return `${PUBLIC_IPFS_GATEWAY}/${cid}`;
+}
+
 export const uploadToIPFS = async (file) => {
 	const formData = new FormData();
 	formData.append("file", file);
