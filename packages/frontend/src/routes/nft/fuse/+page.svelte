@@ -30,6 +30,7 @@
   let nftName = "";
   let expectedLength = null;
   let thumbnailPreview = writable(null);
+  let description = "";
 
   const thumbnail = writable(null);
   const showErrorDialog = writable(false);
@@ -86,9 +87,10 @@
                 .clipInfo(clip_id)
                 .call({ from: $selectedAccount });
               return {
-                cid: clip_id,
+                cid: result.video_cid,
                 clip: getFileFromIPFS(result.video_cid),
                 name: result.name,
+                clip_id: result.id,
               };
             })
           ),
@@ -134,7 +136,7 @@
   let tokenId = null;
 
   async function _fuse() {
-    const clipsArray = $clipsResult.map((clip) => clip.cid);
+    const clipsArray = $clipsResult.map((clip) => clip.clip_id);
 
     // Upload thumbnail to IPFS
     const thumbnailCid = await uploadToIPFS($thumbnail);
@@ -143,11 +145,11 @@
       return; // or handle the error as needed
     }
     let seed = Math.floor(Math.random() * 1000000000);
-    let tokenURI = constructTokenURI(
+    let tokenURI = await constructTokenURI(
       nftName,
-      thumbnailCid.Hash,
-      "",
-      getFileFromIPFS(clipsArray[0])
+      getFileFromIPFS(thumbnailCid.Hash),
+      description,
+      getFileFromIPFS($clipsResult[0].cid)
     );
     const result = await $contracts.Clipper.methods
       .fuse(
@@ -155,7 +157,7 @@
         selectedIDs[1],
         nftName,
         thumbnailCid.Hash,
-        "", // description FIXME
+        description,
         tokenURI,
         seed,
         clipsArray
@@ -257,6 +259,7 @@
             clip: c.clip,
             name: c.name,
             cid: c.cid,
+            clip_id: c.clip_id,
           }))
         );
         clips2.update((clips) =>
@@ -265,6 +268,7 @@
             clip: c.clip,
             name: c.name,
             cid: c.cid,
+            clip_id: c.clip_id,
           }))
         );
         isFusable = false;
@@ -331,11 +335,14 @@
         </label>
       </div>
       <div class="flex-grow">
-        <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
-        <Textarea
-          class="mt-1 border p-8 text-3xl min-h-48"
-          bind:value={nftName}
-        />
+        <div class="flex-grow">
+          <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
+          <Textarea class="border text-2xl" bind:value={nftName} />
+        </div>
+        <div class="flex-grow">
+          <h1 class="mt-2 text-2xl font-bold mb-4">Description</h1>
+          <Textarea class="border text-2xl" bind:value={description} />
+        </div>
       </div>
     </div>
     {#if !loading}

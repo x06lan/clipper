@@ -110,9 +110,10 @@
                 .clipInfo(clip_id)
                 .call({ from: $selectedAccount });
               return {
-                cid: clip_id,
+                cid: result.video_cid,
                 clip: getFileFromIPFS(result.video_cid),
                 name: result.name,
+                clip_id: clip_id,
               };
             })
           ),
@@ -155,8 +156,8 @@
   let executing = false;
 
   async function _split() {
-    const clipsArray1 = $clipsResult1.map((clip) => clip.cid);
-    const clipsArray2 = $clipsResult2.map((clip) => clip.cid);
+    const clipsArray1 = $clipsResult1.map((clip) => clip.clip_id);
+    const clipsArray2 = $clipsResult2.map((clip) => clip.clip_id);
 
     // Upload thumbnail to IPFS
     const thumbnailCid1 = await uploadToIPFS($thumbnail1);
@@ -166,18 +167,33 @@
       return; // or handle the error as needed
     }
     let seed = Math.floor(Math.random() * 1000000000);
-    leftTokenURI = await constructTokenURI(
+    let leftTokenURI = await constructTokenURI(
       nftName1,
-      thumbnailCid1.Hash,
+      getFileFromIPFS(thumbnailCid1.Hash),
       leftNFTdescription,
-      clipsArray1[0]
+      getFileFromIPFS($clipsResult1[0].cid)
     );
-    rightTokenURI = await constructTokenURI(
+    let rightTokenURI = await constructTokenURI(
       nftName2,
       thumbnailCid2.Hash,
       rightNFTdescription,
-      clipsArray2[0]
+      getFileFromIPFS($clipsResult2[0].cid)
     );
+    console.log(
+      selectedID,
+      seed,
+      clipsArray1,
+      clipsArray2,
+      nftName1,
+      nftName2,
+      rightNFTdescription,
+      leftNFTdescription,
+      thumbnailCid2.Hash,
+      thumbnailCid1.Hash,
+      leftTokenURI,
+      rightTokenURI
+    );
+
     const result = await $contracts.Clipper.methods
       .split(
         selectedID,
@@ -186,8 +202,8 @@
         clipsArray2,
         nftName1,
         nftName2,
-        "➡️", // right description FIXME
-        "⬅️", // left description FIXME
+        rightNFTdescription,
+        leftNFTdescription,
         thumbnailCid2.Hash,
         thumbnailCid1.Hash,
         leftTokenURI,
@@ -296,6 +312,7 @@
             clip: c.clip,
             name: c.name,
             cid: c.cid,
+            clip_id: c.clip_id,
           }))
         );
       }}
@@ -367,11 +384,14 @@
             </label>
           </div>
           <div class="flex-grow">
-            <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
-            <Textarea
-              class="mt-1 border p-8 text-3xl min-h-48"
-              bind:value={nftName1}
-            />
+            <div class="flex-grow">
+              <h1 class="mt-2 text-2xl font-bold mb-2">Token Name</h1>
+              <Textarea class="text-2xl" bind:value={nftName1} />
+            </div>
+            <div class="flex-grow">
+              <h1 class="mt-2 text-2xl font-bold mb-2">Description</h1>
+              <Textarea class="text-2xl" bind:value={leftNFTdescription} />
+            </div>
           </div>
         </div>
       </div>
@@ -427,11 +447,14 @@
             </label>
           </div>
           <div class="flex-grow">
-            <h1 class="mt-2 text-2xl font-bold mb-4">Token Name</h1>
-            <Textarea
-              class="mt-1 border p-8 text-3xl min-h-48"
-              bind:value={nftName2}
-            />
+            <div class="flex-grow">
+              <h1 class="mt-2 text-2xl font-bold mb-2">Token Name</h1>
+              <Textarea class="text-2xl" bind:value={nftName2} />
+            </div>
+            <div class="flex-grow">
+              <h1 class="mt-2 text-2xl font-bold mb-2">Description</h1>
+              <Textarea class="text-2xl" bind:value={rightNFTdescription} />
+            </div>
           </div>
         </div>
       </div>
