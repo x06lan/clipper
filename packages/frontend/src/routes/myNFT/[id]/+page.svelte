@@ -131,6 +131,20 @@
             <span class="text-sm text-gray-500">{usdPrice}</span>
           </div>
         {/if}
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold">Description</h3>
+          <p class="text-gray-400">{nft.description}</p>
+        </div>
+        <div class="flex-shrink-0 w-full lg:w-2/3 mt-4 lg:mt-0">
+          <h3 class="text-lg font-semibold">Thumbnail</h3>
+          <div class="mt-5 rounded-lg shadow-lg">
+            <img
+              src={nft.img}
+              alt="NFT"
+              class="nft-image w-full h-auto rounded-lg object-cover"
+            />
+          </div>
+        </div>
         <div class="flex space-x-2">
           {#if nft.selling}
             <AlertDialog.Root>
@@ -207,21 +221,6 @@
               </Dialog.Content>
             </Dialog.Root>
           {/if}
-        </div>
-        <!-- NFT Image Section -->
-        <div class="flex-shrink-0 w-full lg:w-2/3 mt-4 lg:mt-0">
-          <div class="rounded-lg shadow-lg">
-            <img
-              src={nft.img}
-              alt="NFT"
-              class="nft-image w-full h-auto rounded-lg object-cover"
-            />
-          </div>
-        </div>
-        <div class="text-sm text-red-500">Supports creator</div>
-        <div class="mt-6">
-          <h3 class="text-lg font-semibold">Description</h3>
-          <p class="text-gray-400">{nft.description}</p>
         </div>
       </div>
     </div>

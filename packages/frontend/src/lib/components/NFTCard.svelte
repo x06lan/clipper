@@ -14,8 +14,6 @@
   export let variant = "default";
   export let selected = false;
   export let selling = false;
-  export let parent = null;
-  export let children = null;
   export let css =
     "flex flex-col items-center bg-gray-800 p-4 hover:bg-gray-700 transition rounded-lg shadow-lg overflow-hidden";
   let s_id = id.toString();

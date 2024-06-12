@@ -45,9 +45,9 @@
     nft = {
       id: id,
       name: info.name,
+      description: info.description,
       img: getFileFromIPFS(info.image_cid),
       price: info.price,
-      saleEnd: info.saleEnd,
       description: info.description,
     };
     owner = await $contracts.Clipper.methods.ownerOf(nft.id).call();
