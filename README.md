@@ -8,7 +8,7 @@ solidity smart contract with frontend page
 npm install
 
 cd ./packages/contract/ 
-npm build
+npm run build
 
 cd ./packages/frontend/ 
 npm run dev
