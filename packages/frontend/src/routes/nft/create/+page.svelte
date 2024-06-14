@@ -4,14 +4,14 @@
   import * as Dialog from "$lib/components/ui/dialog";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Button } from "$lib/components/ui/button";
-  import { CONTRACT_ABI, CONTRACT_ADDRESS } from "$lib/utils";
+  import { CONTRACT_ABI, CONTRACT_ADDRESS, getFileFromIPFS } from "$lib/utils";
   import { onMount } from "svelte";
   import Loading from "$lib/components/Loading.svelte";
   import { goto } from "$app/navigation";
   import NFTContainer from "$lib/components/NFTContainer.svelte";
 
   import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
-  import { uploadToIPFS } from "$lib/utils";
+  import { uploadToIPFS, constructTokenURI } from "$lib/utils";
   import {
     defaultEvmStores as evm,
     contracts,
@@ -65,13 +65,25 @@
       return {
         id: seed * (index + 1),
         name: clip[0],
-        image_cid: thumbnailCid.Hash,
         video_cid: clip[1],
       };
     });
-    console.log(formattedClips, nftName, thumbnailCid.Hash, seed);
+    let tokenURI = await constructTokenURI(
+      nftName,
+      getFileFromIPFS(thumbnailCid.Hash),
+      description,
+      getFileFromIPFS(formattedClips[0].video_cid)
+    );
+    console.log(
+      formattedClips,
+      nftName,
+      thumbnailCid.Hash,
+      description,
+      tokenURI,
+      seed
+    );
     const result = await $contracts.Clipper.methods
-      .mint(formattedClips, nftName, thumbnailCid.Hash, seed)
+      .mint(formattedClips, nftName, thumbnailCid.Hash, description, tokenURI, seed)
       .send({ from: $selectedAccount })
       .on("transactionHash", (hash) => {
         console.log("Transaction hash:", hash);

@@ -44,6 +44,7 @@
           ),
           price: info.price,
           selling: info.selling,
+          description: info.description,
           children: info.children,
           parent: info.parent,
         };
